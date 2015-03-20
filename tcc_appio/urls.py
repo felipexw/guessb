@@ -1,10 +1,12 @@
-from django.conf.urls import patterns, include, url
+from django.conf.urls import patterns,url, include
+from view import hello,login_home, test_template
 from django.contrib import admin
 
-urlpatterns = patterns('',
-    # Examples:
-    # url(r'^$', 'tcc_appio.views.home', name='home'),
-    # url(r'^blog/', include('blog.urls')),
 
-    url(r'^admin/', include(admin.site.urls)),
+urlpatterns = patterns(
+                       url(r'^hello/$',hello),
+                       url(r'^test$', test_template),
+                       url(r'^tweet$', login_home),
+                       url(r'^$', hello),
+                       url(r'^admin/', include(admin.site.urls)),
 )
