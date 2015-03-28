@@ -1,8 +1,172 @@
-<html>
+
+<!DOCTYPE html>
+<html lang="en">
 <head>
-	<title>TEsttt</title>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="">
+<meta name="author" content="Felipe Appio">
+<link rel="icon" href="../../favicon.ico">
+<title>Guessb</title> {% load staticfiles %}
+<link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
+<link href="{% static 'css/signin.css' %}" rel="stylesheet">
+<link href="{% static 'css/bootstrap-theme.min.css' %}" rel="stylesheet">
+<link href="{% static 'css/home_theme.css' %}" rel="stylesheet">
+<script src="{% static 'js/ie-emulation-modes-warning.js' %}"></script>
+</style>
 </head>
-<body>
-	<p>tessteee</p>
+
+<body role="document">
+	<nav class="navbar navbar-inverse navbar-fixed-top">
+		<div class="container">
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle collapsed"
+					data-toggle="collapse" data-target="#navbar" aria-expanded="false"
+					aria-controls="navbar">
+					<span class="sr-only">Navegação</span> <span class="icon-bar"></span>
+					<span class="icon-bar"></span> <span class="icon-bar"></span>
+				</button>
+				<a class="navbar-brand" href="#">Bem-Vindo, {{name}}</a>
+			</div>
+			<div id="navbar" class="navbar-collapse collapse">
+				<ul class="nav navbar-nav">
+					<li class="active"><a href="#">Home</a></li>
+					<li><a href="#about">About</a></li>
+					<li><a href="#contact">Logout</a></li>
+					</a>
+				</ul>
+			</div>
+		</div>
+	</nav>
+
+	<div class="container theme-showcase" role="main">
+
+		<div class="row">
+			<div class="col-md-12">
+				<div class="bs-example"
+					data-example-id="panel-without-body-with-table">
+					<div class="panel panel-default">
+						<!-- Default panel contents -->
+						<div class="panel-heading">Publicações no Facebook</div>
+
+						<table class="table table-stripped">
+							<thead>
+								<tr>
+									<th colspan="1">Usuário</th>
+									<th>Post</th>
+									<th>Ação</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<td colspan="1">Felipe Appio</td>
+									<td>O Felipe Appio é muito inteligente</td>
+									<td><button type="button" class="btn btn-sm btn-success">Verificar</button></td>
+								</tr>
+								<tr>
+									<td>Maciel</td>
+									<td>O Felipe Appio é muito inteligente</td>
+									<td><button type="button" class="btn btn-sm btn-success">Verificar</button></td>
+								</tr>
+								<tr>
+									<td>Felipe Appio</td>
+									<td>O Felipe Appio é muito inteligente</td>
+									<td><button type="button" class="btn btn-sm btn-success">Verificar</button></td>
+								</tr>
+								<tr>
+									<td>Felipe Appio</td>
+									<td>O Felipe Appio é muito inteligente</td>
+									<td><button type="button" class="btn btn-sm btn-success">Verificar</button></td>
+								</tr>
+								<tr>
+									<td>Felipe Appio</td>
+									<td>O Felipe Appio é muito inteligente</td>
+									<td><button type="button" class="btn btn-sm btn-success">Verificar</button></td>
+								</tr>
+								<tr>
+									<td>Felipe Appio</td>
+									<td>O Felipe Appio é muito inteligente</td>
+									<td><button type="button" class="btn btn-sm btn-success">Verificar</button></td>
+								</tr>
+								<tr>
+									<td>Felipe Appio</td>
+									<td>O Felipe Appio é muito inteligente</td>
+									<td><button type="button" class="btn btn-sm btn-success">Verificar</button></td>
+								</tr>
+								<tr>
+									<td>Felipe Appio</td>
+									<td>O Felipe Appio é muito inteligente</td>
+									<td><button type="button" class="btn btn-sm btn-success">Verificar</button></td>
+								</tr>
+								<tr>
+									<td>Felipe Appio</td>
+									<td>O Felipe Appio é muito inteligente</td>
+									<td><button type="button" class="btn btn-sm btn-success">Verificar</button></td>
+								</tr>
+								<tr>
+									<td>Felipe Appio</td>
+									<td>O Felipe Appio é muito inteligente</td>
+									<td><button type="button" class="btn btn-sm btn-success">Verificar</button></td>
+								</tr>
+								<tr>
+									<td>Felipe Appio</td>
+									<td>O Felipe Appio é muito inteligente</td>
+									<td><button type="button" class="btn btn-sm btn-success">Verificar</button></td>
+								</tr>
+								<tr>
+									<td>Felipe Appio</td>
+									<td>O Felipe Appio é muito inteligente</td>
+									<td><button type="button" class="btn btn-sm btn-success">Verificar</button></td>
+								</tr>
+								<tr>
+									<td>Felipe Appio</td>
+									<td>O Felipe Appio é muito inteligente</td>
+									<td><button type="button" class="btn btn-sm btn-success">Verificar</button></td>
+								</tr>
+								<tr>
+									<td>Felipe Appio</td>
+									<td>O Felipe Appio é muito inteligente</td>
+									<td><button type="button" class="btn btn-sm btn-success">Verificar</button></td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+				</div>
+				<ul class="pagination">
+				<li><a href="#">1</a></li>
+				<li><a href="#">2</a></li>
+				<li><a href="#">3</a></li>
+				<li><a href="#">4</a></li>
+				<li><a href="#">5</a></li>
+			</ul>
+			</div>			
+		</div>
+
+		<footer class="bs-docs-footer" role="contentinfo">
+			<div class="container">
+				<div class="bs-docs-social">
+					<ul class="bs-docs-social-buttons">
+						<li><iframe class="github-btn"
+								src="http://ghbtns.com/github-btn.html?user=twbs&amp;repo=bootstrap&amp;type=fork&amp;count=true"
+								width="102" height="20" title="Fork on GitHub"></iframe></li>
+
+					</ul>
+				</div>
+				<p>Desenvolvido por Felipe Appio colocar link github</p>
+				<ul class="bs-docs-footer-links text-muted">
+					<li>Versão v0.1</li>
+					<li>·</li>
+					<li><a href="https://github.com/felipexw/tcc-appio">GitHub</a></li>
+					<li>·</li>
+				</ul>
+			</div>
+		</footer>
+		<script
+			src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+		<script src="../../dist/js/bootstrap.min.js"></script>
+		<script src="../../assets/js/docs.min.js"></script>
+		<script src="../../assets/js/ie10-viewport-bug-workaround
+		.js"></script>
 </body>
 </html>

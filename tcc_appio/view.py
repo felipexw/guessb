@@ -13,6 +13,7 @@ def login_home(request):
 def hello(requet):
     return HttpResponse("Hello world")
 
-def test_template(request):
-    name = 'Appio'
+def home(request):
+    name = 'Felipe Appio'
     return render(request, 'base.html', {'name': name})
+

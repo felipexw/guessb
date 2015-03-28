@@ -1,0 +1,57 @@
+body {
+  padding-top: 70px;
+  padding-bottom: 30px;
+}
+
+.theme-dropdown .dropdown-menu {
+  position: static;
+  display: block;
+  margin-bottom: 20px;
+}
+
+.theme-showcase > p > .btn {
+  margin: 5px 0;
+}
+
+.theme-showcase .navbar .container {
+  width: auto;
+}
+
+bs-example {
+	margin-right: 0;
+	margin-left: 0;
+	background-color: #fff;
+	border-color: #ddd;
+	border-width: 1px;
+	border-radius: 4px 4px 0 0;
+	-webkit-box-shadow: none;
+	box-shadow: none;
+}
+
+.bs-docs-footer {
+	padding-top: 20px;
+	padding-bottom: 20px;
+	margin-top: 100px;
+	color: #767689;
+	text-align: center;
+	border-top: 1px solid #e5e5e5;
+}
+
+.bs-docs-footer-links {
+	padding-left: 0;
+	margin-top: 20px;
+}
+
+.bs-docs-social {
+	margin-bottom: 20px;
+	text-align: center;
+}
+
+div {
+	display: block;
+}
+
+ul, li {
+	list-style: none;
+	display: inline;
+}

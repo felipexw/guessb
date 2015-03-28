@@ -1,10 +1,10 @@
 import pickle
+# coding: utf-8
 
-classifier = pickle.load(open('/home/felipexw/nltk_data/classifiers/movie_reviews_NaiveBayes.pickle'))
+classifier = pickle.load(open('/home/felipexw/nltk_data/classifiers/gplay_manualmente_NaiveBayes.pickle'))
 
-words = ["you", 'are', 'idiot ' ]
-    
+words = ['desde', 'sempre', 'horrario', '!']
 
 feats = dict([(word, True) for word in words])
 
-print classifier.classify(feats)
+print classifier.classify(feats)   
