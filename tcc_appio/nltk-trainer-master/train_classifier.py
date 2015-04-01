@@ -140,7 +140,7 @@ reader_args = []
 reader_kwargs = {}
 
 if args.cat_file:	
-	reader_kwargs['cat_file'] = args.cat_file
+	reader_kwargs['cat_file'] = args.cfat_file
 	
 	if args.delimiter and args.delimiter != ' ':
 		reader_kwargs['delimiter'] = args.delimiter
