@@ -1,2 +1,4 @@
 eclipse.preferences.version=1
-encoding//tcc_appio/nltk-trainer-master/NayveBayesTest.py=utf-8
+encoding//tcc_appio/main_controller.py=utf-8
+encoding//tcc_appio/naive_bayes_classifier.py=utf-8
+encoding//tcc_appio/view.py=utf-8
