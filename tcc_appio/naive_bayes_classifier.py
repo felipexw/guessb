@@ -1,9 +1,8 @@
 #coding: utf-8
 import pickle
 from nltk.tokenize import word_tokenize
-from nltk.classify import NaiveBayesClassifier
 from settings import BASE_DIR
-import os
+
 
 def classify(text):
     CAMINHO_CLASSIFICADOR =  BASE_DIR+'/tcc_appio/nltk-trainer-master/data/classifiers/gplay_manualmente_NaiveBayes.pickle'
