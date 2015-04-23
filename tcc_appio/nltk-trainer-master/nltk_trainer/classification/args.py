@@ -1,8 +1,20 @@
 from nltk.classify import DecisionTreeClassifier, MaxentClassifier, NaiveBayesClassifier, megam
 from nltk_trainer import basestring
 from nltk_trainer.classification.multi import AvgProbClassifier
+from nltk.stem.snowball import PortugueseStemmer, DutchStemmer, EnglishStemmer,\
+	FinnishStemmer, FrenchStemmer, GermanStemmer, RomanianStemmer, RussianStemmer,\
+	SpanishStemmer, SwedishStemmer
+from nltk.stem.lancaster import LancasterStemmer
+from nltk.stem.regexp import RegexpStemmer
+from nltk.stem.rslp import RSLPStemmer
 
 classifier_choices = ['NaiveBayes', 'DecisionTree', 'Maxent'] + MaxentClassifier.ALGORITHMS
+
+stemmers_choices = ['ISRIStemmer', 'LancasterStemmer', 'RegexpStemmer','RSLPStemmer','PortugueseStemmer',
+				 'DutchStemmer','EnglishStemmer', 'FinnishStemmer', 'FrenchStemmer','GermanStemmer',
+				 'HungarianStemmer', 'ItalianStemmer','PorterStemmer', 'NorwegianStemmer', 
+				 'RomanianStemmer', 'RussianStemmer','SpanishStemmer', 'SwedishStemmer',
+				 'WordNetLemmatizer']
 
 dense_classifiers = set(['ExtraTreesClassifier', 'GradientBoostingClassifier',
 		'RandomForestClassifier', 'GaussianNB', 'DecisionTreeClassifier'])
@@ -17,6 +29,7 @@ except:
 
 try:
 	from nltk.classify import scikitlearn
+	
 	from sklearn.feature_extraction.text import TfidfTransformer
 	from sklearn.pipeline import Pipeline
 	from sklearn import ensemble, feature_selection, linear_model, naive_bayes, neighbors, svm, tree
@@ -44,6 +57,43 @@ try:
 	classifier_choices.extend(sorted(['sklearn.%s' % c.__name__ for c in classifiers]))
 except ImportError as exc:
 	sklearn_classifiers = {}
+	
+####################
+##LOADING STEMMERS##
+####################
+stemmers = []
+try:
+	from nltk.stem import *
+	from nltk.stem.snowball import *
+	stemmers = [ISRIStemmer,
+				LancasterStemmer,
+				RegexpStemmer,
+				RSLPStemmer,
+				PortugueseStemmer,
+				DutchStemmer,
+				EnglishStemmer,
+				FinnishStemmer,
+				FrenchStemmer,
+				GermanStemmer,
+				HungarianStemmer,
+				ItalianStemmer,
+				PorterStemmer,
+				NorwegianStemmer,
+				RomanianStemmer,
+				RussianStemmer,
+				SpanishStemmer,
+				SwedishStemmer,
+				WordNetLemmatizer
+			]
+	
+except ImportError as e:
+	print e
+
+
+def get_stemmer(stemmer_name):
+	for i in xrange(0, len(stemmers)):
+		if stemmers_choices[i] == stemmer_name:
+			return stemmers[i]
 
 def add_maxent_args(parser):
 	maxent_group = parser.add_argument_group('Maxent Classifier',
@@ -123,7 +173,8 @@ def make_sklearn_classifier(algo, args):
 	
 	for key in sklearn_kwargs.get(name, []):
 		val = getattr(args, key, None)
-		if val: kwargs[sklearn_keys.get(key, key)] = val
+		if val: 
+			kwargs[sklearn_keys.get(key, key)] = val
 	
 	if args.trace and kwargs:
 		print('training %s with %s' % (algo, kwargs))
@@ -220,3 +271,5 @@ def make_classifier_builder(args):
 	
 	return trainf
 	#return lambda(train_feats): classifier_train(train_feats, **classifier_train_kwargs)
+
+	

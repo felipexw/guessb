@@ -1,3 +1,4 @@
+#!/usr/bin/python
 import enchant
 from nltk.metrics import edit_distance
 

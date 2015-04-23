@@ -1,25 +1,28 @@
 #!/usr/bin/env python
+# -*- coding: utf-8 -*-
 import argparse, collections, functools, itertools, math, operator, os.path, re, string, sys
 import nltk.data
 import nltk_trainer.classification.args
 from nltk.classify import DecisionTreeClassifier, MaxentClassifier, NaiveBayesClassifier
 from nltk.classify.util import accuracy
+from nltk.stem import *
 from nltk.corpus import stopwords
 from nltk.corpus.reader import CategorizedPlaintextCorpusReader, CategorizedTaggedCorpusReader
 from nltk.corpus.util import LazyCorpusLoader
 from nltk.metrics import BigramAssocMeasures, f_measure, masi_distance, precision, recall
 from nltk.probability import FreqDist, ConditionalFreqDist
 from nltk.util import ngrams
+from spelling_replacer import *
 from nltk_trainer import dump_object, import_attr, iteritems, load_corpus_reader
 from nltk_trainer.classification import corpus, scoring
 from nltk_trainer.classification.featx import (bag_of_words, bag_of_words_in_set,
 	word_counts, train_test_feats, word_counts_in_set)
 from nltk_trainer.classification.multi import MultiBinaryClassifier
+from enchant.checker import SpellChecker
 
 ########################################
 ## command options & argument parsing ##
 ########################################
-
 parser = argparse.ArgumentParser(description='Train a NLTK Classifier')
 
 parser.add_argument('corpus', help='corpus name/path relative to an nltk_data directory')
@@ -83,6 +86,12 @@ feat_group = parser.add_argument_group('Feature Extraction',
 	'The default is to lowercase every word, strip punctuation, and use stopwords')
 feat_group.add_argument('--ngrams', nargs='+', type=int,
 	help='use n-grams as features.')
+feat_group.add_argument('--stemmer', default='', 
+					choices=nltk_trainer.classification.args.stemmers_choices,					
+					help='stem and lematize (normalize) each word in the corpora before the training. Aditional'+
+					' information can be found at: http://www.nltk.org/api/nltk.stem.html')
+feat_group.add_argument('--spelling-replacer', action='store_true', default=False,
+					help='replace repeating characters in a given word based on Enchant dictionary')
 feat_group.add_argument('--no-lowercase', action='store_true', default=False,
 	help="don't lowercase every word")
 feat_group.add_argument('--filter-stopwords', default='no',
@@ -186,6 +195,8 @@ elif nlabels == 1:
 	raise ValueError('corpus must have more than 1 category')
 elif nlabels == 2 and args.multi:
 	raise ValueError('corpus must have more than 2 categories if --multi is specified')
+elif nlabels > 2 and not args.multi:
+	raise ValueError('if corpus have more than 2 categories, then --multi must be specified')
 
 ########################
 ## text normalization ##
@@ -207,6 +218,17 @@ def norm_words(words):
 	if stopset:
 		words = (w for w in words if w.lower() not in stopset)
 	
+	#spelling correction (characteres reppeated)
+	if args.spelling_replacer:
+		spr = SpellingReplacer()
+		words = (w for w in words if spr.replace(w))
+	
+	#stemming and lemmatization (normalization)
+	if not args.stemmer == '':
+		stemmer = nltk_trainer.classification.args.get_stemmer(args.stemmer)
+		stemmer = stemmer()
+		words = (w for w in words if stemmer.stem(w))
+		
 	# in case we modified words in a generator, ensure it's a list so we can add together
 	if not isinstance(words, list):
 		words = list(words)
@@ -411,7 +433,7 @@ if not args.no_eval:
 if args.show_most_informative and hasattr(classifier, 'show_most_informative_features') and not (args.multi and args.binary) and not args.cross_fold:
 	print('%d most informative features' % args.show_most_informative)
 	classifier.show_most_informative_features(args.show_most_informative)
-
+	
 ##############
 ## pickling ##
 ##############
