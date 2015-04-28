@@ -1,5 +1,6 @@
 import collections, itertools, random
 from numpy import array
+import numpy
 from nltk.metrics import masi_distance, f_measure, precision, recall
 from nltk_trainer import iteritems
 
@@ -146,3 +147,89 @@ def cross_fold(instances, trainf, testf, folds=10, trace=1, metrics=True, inform
 			print('%s f_measure variance: %f' % (key, array(fs).var()))
 	
 	return accuracies, precisions, recalls, f_measures
+
+def k_fold_validation(instances, trainf, testf, folds=10, trace=1, metrics=True, informative=0, n_labels = 3):
+	if folds <= 2:
+		raise ValueError('must have at least 3 folds')
+	# ensure isn't an exhaustible iterable
+	instances = list(instances)
+	# randomize so get an even distribution, in case labeled instances are
+	# ordered by label
+	random.shuffle(instances)
+	l = len(instances)
+	step = int(l / folds)
+	
+	if trace:
+		print('step %d over %d folds of %d instances' % (step, folds, l))
+	
+	accuracies, precisions, recalls, f_measures = [],[],[],[]
+	 
+	
+	maior_acuracia = -2
+	melhor_classificador = None
+	
+	for f in range(folds):
+		if trace:
+			print('\nfold %d' % (f + 1))
+			print('-----%s' % ('-' * len('%s' % (f + 1))))
+		
+		start = f * step
+		end = start + step
+		train_instances = instances[:start] + instances[end:]
+		test_instances = instances[start:end]
+		
+		if trace:
+			print('training on %d:%d + %d:%d' % (0, start, end, l))
+		
+		obj = trainf(train_instances)
+		
+		if trace:
+			print('testing on %d:%d' % (start, end))
+		
+		if metrics:
+			refsets, testsets = ref_test_sets(obj, test_instances)
+			
+			for key in set(refsets.keys()) | set(testsets.keys()):
+				ref = refsets[key]
+				test = testsets[key]
+				p = precision(ref, test) or 0
+				r = recall(ref, test) or 0
+				f = f_measure(ref, test) or 0
+				precisions.append(p)
+				recalls.append(r)
+				f_measures.append(f)
+				
+				if trace:
+					print('%s precision: %f' % (key, p))
+					print('%s recall: %f' % (key, r))
+					print('%s f-measure: %f' % (key, f))
+		
+		accuracy = testf(obj, test_instances)
+		
+		if trace:
+			print('accuracy: %f' % accuracy)
+		
+		if accuracy > maior_acuracia:
+			maior_acuracia = accuracy
+			melhor_classificador = obj
+		
+		accuracies.append(accuracy)
+		
+		if trace and informative and hasattr(obj, 'show_most_informative_features'):
+			obj.show_most_informative_features(informative)
+	
+	if trace:
+		print('\nmean and variance across folds')
+		print('------------------------------')
+		print('accuracy mean: %f' % numpy.average(accuracies))
+		print('accuracy standard deviation: %f' % numpy.std(accuracies))
+		#print('accuracy variance: %f' % array(accuracies).var())
+		
+		print('recall mean: %f ' % numpy.average(recalls))
+		print('recall standard deviation: %f' % numpy.std(recalls))
+		print('precision mean: %f ' % numpy.average(precisions))
+		print('precision standard deviation: %f ' % numpy.std(precisions))
+		print('f-measure mean: %f' %numpy.average(f_measures))
+		print('f-measure standard deviation: %f' %numpy.std(f_measures))
+		
+	return accuracies, precisions, recalls, f_measures, melhor_classificador

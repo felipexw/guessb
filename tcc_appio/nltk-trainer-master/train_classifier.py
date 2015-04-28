@@ -128,7 +128,7 @@ eval_group.add_argument('--no-fmeasure', action='store_true', default=False,
 	help="don't evaluate f-measure")
 eval_group.add_argument('--no-masi-distance', action='store_true', default=False,
 	help="don't evaluate masi distance (only applies to a multi binary classifier)")
-eval_group.add_argument('--cross-fold', type=int, default=10,
+eval_group.add_argument('--cross-fold', type=int, default=0,
 	help='''If given a number greater than 2, will do cross fold validation
 	instead of normal training and testing. This option implies --no-pickle,
 	is useless with --trace 0 and/or --no-eval, and currently does not work
@@ -383,25 +383,31 @@ if args.trace:
 ## training ##
 ##############
 trainf = nltk_trainer.classification.args.make_classifier_builder(args)
+entrou = False
+classifier = None
 
 if args.cross_fold:
 	if args.multi and args.binary:
 		raise NotImplementedError ("cross-fold is not supported for multi-binary classifiers")
-	scoring.cross_fold(train_feats, trainf, accuracy, folds=args.cross_fold,
+	
+	entrou = True
+	#accuracies, precisions, recalls, f_measures, classifier = scoring.cross_fold(train_feats, trainf, accuracy, folds=args.cross_fold,
+	#	trace=args.trace, metrics=not args.no_eval, informative=args.show_most_informative)
+	accuracies, precisions, recalls, f_measures, classifier = scoring.k_fold_validation(train_feats, trainf, accuracy, folds=args.cross_fold,
 		trace=args.trace, metrics=not args.no_eval, informative=args.show_most_informative)
-	#sys.exit(0)
 
 if args.multi and args.binary:
 	if args.trace:
 		print('training multi-binary %s classifier' % args.classifier)
 	classifier = MultiBinaryClassifier.train(labels, train_feats, trainf)
-else:
+
+elif not entrou:
 	classifier = trainf(train_feats)
 
 ################
 ## evaluation ##
 ################
-if not args.no_eval:
+if not args.no_eval and not args.cross_fold > 2:
 	if not args.no_accuracy:
 		try:
 			print('accuracy: %f' % accuracy(classifier, test_feats))
@@ -430,6 +436,9 @@ if not args.no_eval:
 			if not args.no_fmeasure:
 				print('%s f-measure: %f' % (label, f_measure(ref, test) or 0))
 
+####################################
+## showing most informative words ##
+####################################
 if args.show_most_informative and hasattr(classifier, 'show_most_informative_features') and not (args.multi and args.binary) and not args.cross_fold:
 	print('%d most informative features' % args.show_most_informative)
 	classifier.show_most_informative_features(args.show_most_informative)
