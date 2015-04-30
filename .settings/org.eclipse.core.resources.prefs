@@ -1,6 +1,7 @@
 eclipse.preferences.version=1
 encoding//tcc_appio/main_controller.py=utf-8
 encoding//tcc_appio/naive_bayes_classifier.py=utf-8
+encoding//tcc_appio/nltk-trainer-master/nltk_trainer/classification/scoring.py=utf-8
 encoding//tcc_appio/nltk-trainer-master/nltk_trainer/featx/metaphone.py=utf-8
 encoding//tcc_appio/nltk-trainer-master/train_classifier.py=utf-8
 encoding//tcc_appio/view.py=utf-8

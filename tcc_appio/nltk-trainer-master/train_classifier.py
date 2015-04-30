@@ -389,7 +389,7 @@ classifier = None
 if args.cross_fold:
 	if args.multi and args.binary:
 		raise NotImplementedError ("cross-fold is not supported for multi-binary classifiers")
-	
+	##IMPLEMENTAR AQUI
 	entrou = True
 	#accuracies, precisions, recalls, f_measures, classifier = scoring.cross_fold(train_feats, trainf, accuracy, folds=args.cross_fold,
 	#	trace=args.trace, metrics=not args.no_eval, informative=args.show_most_informative)

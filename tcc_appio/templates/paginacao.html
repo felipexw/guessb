@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="">
+<meta name="author" content="Felipe Appio">
+<head>
+{% load staticfiles %}
+<script src="{% static 'js/jquery-2.1.3.min.js' %}"></script>
+<script src="{% static 'js/bootstrap.min.js' %}"></script>
+<script src="{% static 'js/jquery.bootpag.min.js' %}"></script>
+
+<link rel="{% static 'css/bootstrap.min.css' %}" />
+
+</head>
+<body>
+	<div id="content">Dynamic Content goes here</div>
+	<div id="page-selection">
+		<nav>
+			<ul class="pagination">
+				<li class="disabled"><span> <span aria-hidden="true">&laquo;</span>
+				</span></li>
+				<li class="active"><span>1 <span class="sr-only">(current)</span></span>
+				</li> ...
+			</ul>
+		</nav>
+	</div>
+	<script>
+		// init bootpag
+		$('#page-selection').bootpag({
+			total : 10
+		}).on("page", function(event, /* page number here */num) {
+			$("#content").html("Insert content"); // some ajax content loading...
+		});
+	</script>
+</body>
+</html>

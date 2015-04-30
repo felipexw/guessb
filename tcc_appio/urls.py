@@ -1,13 +1,13 @@
 from django.conf.urls import patterns,url, include
-from view import hello,login_home, home, get_comentarios
+from view import get_comentarios, show_home, show_posts, show_paginacao
 from django.contrib import admin
 
 
 urlpatterns = patterns(
-                       url(r'^hello/$',hello),
-                       url(r'^$', home),
-                       url(r'^tweet$', login_home),
-                       url(r'^$', hello),
+                       url(r'^home/$', show_home),
+                       url(r'^home/$', show_home),
+                       url(r'^posts/', show_posts),
+                       url(r'^$', show_home),
                        url(r'^admin/', include(admin.site.urls)),
-                       url(r'^comentarios', get_comentarios),
+                       url(r'^paginacao/$', show_paginacao),                       
 )
