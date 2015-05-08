@@ -218,12 +218,12 @@ def norm_words(words):
 	if stopset:
 		words = (w for w in words if w.lower() not in stopset)
 	
-	#spelling correction (characteres reppeated)
+	#spelling correction (characteres reppeated, grammatical correction)
 	if args.spelling_replacer:
 		spr = SpellingReplacer()
 		words = (w for w in words if spr.replace(w))
 	
-	#stemming and lemmatization (normalization)
+	#stemming 
 	if not args.stemmer == '':
 		stemmer = nltk_trainer.classification.args.get_stemmer(args.stemmer)
 		stemmer = stemmer()

@@ -19,13 +19,46 @@
 <script src="{% static 'js/sweet-alert.js' %}"></script>
 <script src=""></script>
 <script src="{% static 'js/base.js' %}"></script>
+<script type="text/javascript">
+	function update() {
+		pagina = document.URL.split("/")[document.URL.split("/").length - 2];
+		switch (pagina) {
+		case 'posts':
+			document.getElementById('btn_posts').className = 'active';
+			document.getElementById('btn_sobre').className = '';
+			break;
+		case 'sobre':
+			document.getElementById('btn_sobre').className = 'active';
+			document.getElementById('btn_posts').className = '';
+			break;
+		}
+		updatePagina();
+	}
+	function updatePagina() {
+		regExp = new RegExp('page=[0-9]');
+		if (document.URL.match(regExp)) {
+			numeroPagina = document.URL.match(regExp)[0].split('=')[1];
+			objetoPaginacao = document.getElementById('paginacao');
+			childNodes = objetoPaginacao.childNodes;
 
+			for (i = 0; i < childNodes.length; i++) {
+				if (i + 1 != numeroPagina) {
+					childNodes[i].className = '';
+				} else {
+					childNodes[i].className = 'active';
+				}
+			}
+
+		} else {
+			document.getElementById('paginacao').childNodes[0].className = 'active';
+		}
+	}
+</script>
 </head>
 
-<body>
+<body onload="update()">
 	<div class="container">
 		<div class="row clearfix">
-
 			<img alt="Banner" src="{% static 'images/hero_guessb.fw.png' %}"
 				style="width: 100%" class="img-rounded">
 			<nav class="navbar navbar-default" role="navigation">
@@ -36,7 +69,7 @@
 							class="icon-bar"></span><span class="icon-bar"></span><span
 							class="icon-bar"></span>
 					</button>
-					<a class="navbar-brand" href="#"> <img alt="Logo"
+					<a class="navbar-brand" href="../"> <img alt="Logo"
 						src="{% static 'images/logo.png' %}"
 						style="max-height: 30px; max-width: 120px;">
 					</a>
@@ -45,30 +78,29 @@
 				<div class="collapse navbar-collapse"
 					id="bs-example-navbar-collapse-1">
 					<ul class="nav navbar-nav">
-						<li class="active"><a href="#">Home</a></li>
-					</ul>
-					<ul class="nav navbar-nav navbar-right">
-						<li><a href="#">Logout</a></li>
+						<li id="btn_sobre" onclick="atualiza_classe(this)"><a
+							href="../sobre">Sobre</a></li>
+						<li id="btn_posts" onclick="atualiza_classe(this)"><a
+							href="../posts">Posts</a></li>
 					</ul>
 				</div>
 
 			</nav>
 			{{conteudo_dinamico|safe }}
-			
+
 		</div>
-		
-<!-- 		<footer class="bs-docs-footer" role="contentinfo"> -->
-<!-- 			<div class="container"> -->
-				
-<!-- 				<p>Desenvolvido por Felipe Appio</p> -->
-<!-- 				<ul class="bs-docs-footer-links text-muted"> -->
-<!-- 					<li>Versão v0.1</li> -->
-<!-- 					<li>·</li> -->
-<!-- 					<li><a href="https://github.com/felipexw/tcc-appio">GitHub</a></li> -->
-<!-- 					<li>·</li> -->
-<!-- 				</ul> -->
-<!-- 			</div> -->
-<!-- 		</footer> -->
-		
+
+		<footer class="bs-docs-footer" role="contentinfo">
+			<div class="container">
+
+				<p>Desenvolvido por Felipe Appio</p>
+				<ul class="bs-docs-footer-links text-muted">
+					<li>Versão v0.1</li>
+					<li>·</li>
+					<li><a href="https://github.com/felipexw/tcc-appio">GitHub</a></li>
+					<li>·</li>
+				</ul>
+			</div>
+		</footer>
 </body>
 </html>
