@@ -9,5 +9,6 @@ urlpatterns = patterns(
                        url(r'^posts/', show_posts),
                        url(r'^$', show_home),
                        url(r'^sobre/$', show_sobre),
-                       url(r'^comments/$', get_comentarios),                       
+                       url(r'^comments/$', get_comentarios),                                              
 )
+

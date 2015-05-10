@@ -8,7 +8,7 @@ from django.shortcuts import render
 from main_controller import get_feed, get_coments, get_user_info
 
 import math
-ACCESS_TOKEN = 'CAACEdEose0cBAGu3DIqI21LzBNCaxK7zXzBBKr1CsBqZB2zRpNnrgIEgNT1svPSj5BTmZBlMY9XlzGRjas6Pi4qqtUB8g4p81ivwQG9REwhNLEIpL1gXZBZBJoXYWowBoLqpjdTWZCkj4HC7FchRhBU0evcVG0q3zbde5bZAk0o4Up0H8dTRkfnn0bq5JSDSOWTjAZBMAi3KJHts2ZAW6FTi'
+ACCESS_TOKEN = 'CAACEdEose0cBAM3uF2citqVNidoZBBQaTEozYrj1837WlFJp1BlVpeyrSNCovEyZAD1sOBmZBUfqn4UIgCmkbjQiZAtNZA21TZASmKe6M5vX4n4fLHf1U5ZANUQ8ZAbCZCZBJWg4MuCMrX2MJlivqxpQyWvxk24slhOvPxJOVOTHTlu2zNNZCT0GPoFzbDKOHJE57u5aoDt516ceFd79PjNQCAT'
 user_info = {}
 QUANTIDADE_PUBLICACOES_PAGINA = 5
 
@@ -23,11 +23,12 @@ def show_posts(request):
     if  numero_pagina == None:
         numero_pagina = 1
     
-    html = '<div class="container theme-showcase" role="main"> <div class="row">  <div class="bs-example" data-example-id="panel-without-body-with-table"> <div class="panel panel-default"> <div class="panel-heading"> Publicacoes no Facebook </div> <table class="table table-stripped"> <thead>  <tr> <th colspan="1"> Usuario </th> <th> Post</th> <th> Link </th> <th> Acao </th> </tr> </thead> <tbody id="tbody_conteudo">'
+    html = '<div class="container theme-showcase" role="main"> <div class="row">  <div class="bs-example" data-example-id="panel-without-body-with-table"> <div class="panel panel-default"><div class="panel-heading"><div class="btn-group pull-right"><button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown"><i class="glyphicon glyphicon-th icon-th"></i> <span class="caret"></span></button>    <ul class="dropdown-menu" role="menu">    <li><input type="checkbox" value="pos" onclick="filtrar(this);">Positivo</li>  <li><input type="checkbox" value="neg" onclick="filtrar(this);">Negativo</li>  <li><input type="checkbox"   value="neu" onclick="filtrar(this);" >NEUTROo</li></ul>    </div>   <h4>Publicacoes no Facebook</h4></div><table class="table table-stripped"> <thead>  <tr> <th colspan="1"> Usuario </th> <th> Post</th> <th> Link </th> <th> Acao </th> </tr> </thead> <tbody id="tbody_conteudo">'
     dados = get_feed(ACCESS_TOKEN)
     user_info = get_user_info(ACCESS_TOKEN)
     
     ultimo_indice = (QUANTIDADE_PUBLICACOES_PAGINA * int(numero_pagina)) 
+    
     primeiro_indice = ultimo_indice - QUANTIDADE_PUBLICACOES_PAGINA
     
     j = 0
@@ -67,7 +68,7 @@ def get_comentarios(request):
     if  numero_pagina == None:
         numero_pagina = 1
     
-    html = '<div class="container theme-showcase" role="main"> <div class="row"> <div class="bs-example" data-example-id="panel-without-body-with-table"> <div class="panel panel-default"> <div class="panel-heading"> Publicacoes no Facebook </div> <table class="table table-stripped"> <thead>  <tr> <th colspan="1"> Usuario </th> <th> Post</th> <th> Acao </th> </tr> </thead> <tbody id="tbody_conteudo">'
+    html = '<div class="container theme-showcase" role="main"> <div class="row"> <div class="bs-example" data-example-id="panel-without-body-with-table"> <div class="panel panel-default"> <div class="panel-heading"><div class="btn-group pull-right">    <ul>    <li><input type="checkbox" value="pos" onclick="filtrar(this);" >Positivo</li>  <li><input type="checkbox" value="neg" onclick="filtrar(this);">Negativo</li>  <li><input type="checkbox" value="neu" onclick="filtrar(this);">Neutro</li></ul>    </div>   <h4>Publicacoes no Facebook</h4></div><table class="table table-stripped"> <thead>  <tr> <th colspan="1"> Usuario </th> <th> Post</th> <th> Acao </th> </tr> </thead> <tbody id="tbody_conteudo">'
     comentarios = get_coments(ACCESS_TOKEN, request.GET.get('id'))
     
     ultimo_indice = (QUANTIDADE_PUBLICACOES_PAGINA * int(numero_pagina)) 
@@ -84,6 +85,4 @@ def get_comentarios(request):
     html += ' <tbody id="tbody_conteudo"> </tbody> </table> </div> </div> '                        
     html += get_html_paginacao(len(comentarios), QUANTIDADE_PUBLICACOES_PAGINA, 'comments', request.GET.get('id'))
     return render(request, 'base.html', {'name': user_info.get('sobrenome'), 'conteudo_dinamico': html})
-
-
 
