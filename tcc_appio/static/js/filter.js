@@ -56,3 +56,37 @@ function processFilter(value){
 	}
 
 }
+
+function update() {
+	pagina = document.URL.split("/")[document.URL.split("/").length - 2];
+	switch (pagina) {
+	case 'posts':
+		document.getElementById('btn_posts').className = 'active';
+		document.getElementById('btn_sobre').className = '';
+		break;
+	case 'sobre':
+		document.getElementById('btn_sobre').className = 'active';
+		document.getElementById('btn_posts').className = '';
+		break;
+	}
+	updatePagina();
+}
+function updatePagina() {
+	regExp = new RegExp('page=[0-9]');
+	if (document.URL.match(regExp)) {
+		numeroPagina = document.URL.match(regExp)[0].split('=')[1];
+		objetoPaginacao = document.getElementById('paginacao');
+		childNodes = objetoPaginacao.childNodes;
+
+		for (i = 0; i < childNodes.length; i++) {
+			if (i + 1 != numeroPagina) {
+				childNodes[i].className = '';
+			} else {
+				childNodes[i].className = 'active';
+			}
+		}
+
+	} else {
+		document.getElementById('paginacao').childNodes[0].className = 'active';
+	}
+}
