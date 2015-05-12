@@ -38,12 +38,13 @@ def get_coments(token, id):
     feed_data = facebook_object.get('me/feed')
     array_comentarios = []
     novos_comentarios = []
+    
     for data in  feed_data['data']:
         if data.get('id') == id:
             array_comentarios = data.get('comments').get('data')
             
             for i in xrange(0, len(array_comentarios)):
-                polaridade = classify(array_comentarios[i].get('message'))
+                polaridade = get_polaridade(classify(array_comentarios[i].get('message')))                
                 novos_comentarios.append(
                                          dict(autor_comentario=array_comentarios[i].get('from').get('name'), comentario=array_comentarios[i].get('message'), polaridade=polaridade))
     
@@ -53,6 +54,12 @@ def get_user_info(token):
     facebook_object = OpenFacebook(token)
     data = facebook_object.get('me')
     return {'sobrenome': data.get('last_name')}
-        
 
+def get_polaridade(polaridade):
+    if (polaridade == 'neu'):
+        return 'Neutro'        
     
+    elif (polaridade == 'neg'):
+        return 'Negativo'
+    
+    return "Positivo"
