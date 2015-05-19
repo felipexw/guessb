@@ -1,64 +1,48 @@
 from open_facebook.api import OpenFacebook
 from naive_bayes_classifier import classify
+from UserString import MutableString
 
-def get_feed(token):
-    facebook_object = OpenFacebook(token)
-    feed_data = facebook_object.get('me/feed')
-    array_conteudo = []
+class MainController(object):
+    def getPolaridade(self, polaridade):
+        if (polaridade == 'neu'):
+            return 'Neutro'
+    
+        elif (polaridade == 'pos'):
+            return "Positivo"
+    
+        return'Negativo'
+
+    
+    def getFeed(self,token):
+        facebookObject = OpenFacebook(token)
+        feedData = facebookObject.get('me/feed')
+        arrayConteudo = []
         
-    for data in feed_data['data']:
-        novos_comentarios = [] 
-        link, mensagem, autor,autor_id = '', '', '', ''
+        for data in feedData['data']:
+            if not 'comments' in data:
+                continue
+            else:
+                arrayConteudo.append(
+                                     dict(autor_id=data.get('from').get('id'), autor=data.get('from').get('name',''), 
+                                          mensagem=data.get('message','(Postagem sem texto)'), link=data.get('link'), id=data.get('id')))
         
-        if 'comments' in data:
-            array_comentarios = data.get('comments').get('data')
-            
-            for i in xrange(0, len(array_comentarios)):
-                novos_comentarios.append(
-                                         dict(autor_comentario=array_comentarios[i].get('from').get('name'), comentario=array_comentarios[i].get('message')))
-            
-        autor = data['from']['name'] 
-        autor_id = data.get('from').get('id','')
-        
-        if 'message' in data:
-            mensagem = data.get('message')
-            
-        if 'link' in data:
-            link = data.get('link')
-            
+        return arrayConteudo
+
+    def getComments(self,token, id):
+        facebookObject = OpenFacebook(token)
+        feedData = facebookObject.get('me/feed')
+        arrayComentarios = []
+        novosComentarios = []
+    
+        for data in  feedData['data']:
+            if data.get('id') == id:
+                arrayComentarios = data.get('comments').get('data')
                 
-        if len(novos_comentarios) > 0:    
-            array_conteudo.append(dict(autor_id=autor_id, autor=autor, mensagem=mensagem, link=link, comentarios=novos_comentarios, id=data['id']))
-        
-        novos_comentarios = []
-    return array_conteudo
-
-def get_coments(token, id):
-    facebook_object = OpenFacebook(token)
-    feed_data = facebook_object.get('me/feed')
-    array_comentarios = []
-    novos_comentarios = []
-    for data in  feed_data['data']:
-        if data.get('id') == id:
-            array_comentarios = data.get('comments').get('data')
-            
-            for i in xrange(0, len(array_comentarios)):
-                polaridade = get_polaridade(classify(array_comentarios[i].get('message')))
-                novos_comentarios.append(
-                                         dict(autor_id=array_comentarios[i].get('from').get('id'),autor_comentario=array_comentarios[i].get('from').get('name'), comentario=array_comentarios[i].get('message'), polaridade=polaridade))
+                for i in xrange(0, len(arrayComentarios)):
+                    polaridade = self.getPolaridade(classify(arrayComentarios[i].get('message','')))
+                    
+                    novosComentarios.append(
+                                            dict(autor_id=arrayComentarios[i].get('from').get('id'),autor_comentario=arrayComentarios[i].get('from').get('name'), comentario=arrayComentarios[i].get('message',''), polaridade=polaridade))
     
-    return novos_comentarios
+        return novosComentarios
 
-def get_user_info(token):
-    facebook_object = OpenFacebook(token)
-    data = facebook_object.get('me')
-    return {'sobrenome': data.get('last_name')}
-
-def get_polaridade(polaridade):
-    if (polaridade == 'neu'):
-        return 'Neutro'
-    
-    elif (polaridade == 'pos'):
-        return "Positivo"
-    
-    return'Negativo'

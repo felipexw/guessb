@@ -4,48 +4,43 @@
 @author: felipexw
 '''
 from django.shortcuts import render
-from main_controller import get_feed, get_coments, get_user_info
-
+from tcc_appio.main_controller import MainController
 import math
-ACCESS_TOKEN = 'CAACEdEose0cBAOBfouZBpQRxzpoz14lKxTZAbRxIOm1iIf0kceiGNFAJ9OmG0jhRJoyWT5v9H5rL59aW8xUlDQGizDpNyEKtLKaBRMrGko9YcPQqZCPENbSZBmjVGD188Hfcl5wNxZAHQjZBiUYdeQ5ItMm6MOPFfjl1pNEx3bS46GkXnccY77fVXMERAzviQjvHqnADndmxMZB9SxQukZBD'
-user_info = {}
+
+ACCESS_TOKEN = 'CAACEdEose0cBAFNZCeseoZCdjsPAebvhfTM9EYfMVQZADoHyvfZAvtwEFFS1rgCLFbqQq766D15lwkVwsZCOZAnhytov8bZBggvxIM6UE3feLZCqZAszZAY0ww3UZBN8OVGEwYcaK6SDto4c7xoKq4lN8ET70261H5EmlD7ZBmA9CHTF4XUZAqPjcYdsdjthn4GEMHgWzyIKpjZBDoHyzYLiwJ6n5k    '
 QUANTIDADE_PUBLICACOES_PAGINA = 5
+mainController = MainController()
 
-def show_sobre(request):
+def show_about(request):
     html = '<div class="jumbotron"> <h1>Seja bem-vindo ao Guessb!</h1><p>Este webapp é o Trabalho de Conclusão apresentado ao Curso de Sistemas de Informação, da Universidade do Estado de Santa Catarina, como requisito parcial para obtenção do grau de Bacharel em Sistemas de Informação.</p></div></div>'
-    return render(request, 'base.html', {'conteudo_dinamico':html}) 
+    return render(request, 'base.html', {'conteudo_dinamico':html})
 
-def show_posts(request):
-    numero_pagina = request.GET.get('page')
-    
+def get_indices_paginacao(numero_pagina):
     if  numero_pagina == None:
         numero_pagina = 1
     
-    html = '<div class="container theme-showcase" role="main"> <div class="row">  <div class="bs-example" data-example-id="panel-without-body-with-table"> <div class="panel panel-default"><div class="panel-heading"><h4>Publicacoes no Facebook</h4></div><table class="table table-stripped"> <thead>  <tr> <th colspan="1"> Usuario </th> <th> Post</th> <th> Link </th> <th> Acao </th> </tr> </thead> <tbody id="tbody_conteudo">'
-    dados = get_feed(ACCESS_TOKEN)
-    user_info = get_user_info(ACCESS_TOKEN)
-    
-    ultimo_indice = (QUANTIDADE_PUBLICACOES_PAGINA * int(numero_pagina)) 
-    
+    ultimo_indice = (QUANTIDADE_PUBLICACOES_PAGINA * int(numero_pagina))
     primeiro_indice = ultimo_indice - QUANTIDADE_PUBLICACOES_PAGINA
+    return primeiro_indice, ultimo_indice
+     
+def show_posts(request):
+    primeiro_indice, ultimo_indice = get_indices_paginacao(request.GET.get('page'))
+    html = '<div class="container theme-showcase" role="main"> <div class="row">  <div class="bs-example" data-example-id="panel-without-body-with-table"> <div class="panel panel-default"><div class="panel-heading"><h4>Publicacoes no Facebook</h4></div><table class="table table-stripped"> <thead>  <tr> <th colspan="1"> Usuario </th> <th> Post</th> <th> Link </th> <th> Acao </th> </tr> </thead> <tbody id="tbody_conteudo">'
+        
+    dados = mainController.getFeed(ACCESS_TOKEN)
     
     j = 0
     
     for i in xrange(0, len(dados)):
         if i >= primeiro_indice and i < ultimo_indice:
-            if dados[i]['mensagem'] == '':
-                dados[i]['mensagem'] = '(Publicacao sem texto)'
-            
-            img = '<img  src="//graph.facebook.com/'+dados[i].get('autor_id')+'/picture?type=large"' + ' class="img-circle img-responsive"/>'
-            print dados[i].get('autor_id')
-            html += '<tr><td>'+img+'<p style="text-align: center">'+ dados[i]['autor'] + '</p>  </td><td>' + dados[i]['mensagem'] + '</td><td><a href="%s' % dados[i]['link'] + '">Link</a></td><td><a href='"../comments?id=" + dados[i]['id'] + '' + ' role="button" class="btn btn-sm btn-success">Analizar</a></td></tr>'
-            #html += '<tr><td>' + img +' <p style="text-align: center">' + dados[i].get('autor_comentario') + '</p></td><td>%s' % dados[i]['mensagem'] + '</td><td><a href="%s' % dados[i]['link'] + '">Link</a></td><td><a href='"../comments?id=" + dados[i]['id'] + '' + ' role="button" class="btn btn-sm btn-success">Analizar</a></td></tr>'
+            img = '<img  src="//graph.facebook.com/'+dados[i].get('autor_id')+'/picture?type=large"' + ' style="width: 75px; height: 75px;" class="img-circle"/>'
+            html += '<tr><td><div class="col-md-6 column">'+img+'<p style="text-align: center">'+ dados[i]['autor'] + '</p>  </div></td><td><div class="col-md-12 column">' + dados[i]['mensagem'] + '</div></td><td><div class="col-md-2 column"> <a href="%s' % dados[i]['link'] + '">Link</a></div></td><td><div class="col-md-2 column"><a href='"../comments?id=" + dados[i]['id'] + '' + ' role="button" class="btn btn-sm btn-success">Analizar</a></div></td></tr>'
             j += 1
         if j == QUANTIDADE_PUBLICACOES_PAGINA:
             break        
     html += ' <tbody id="tbody_conteudo"> </tbody> </table> </div> </div> '                        
     html += get_html_paginacao(len(dados), QUANTIDADE_PUBLICACOES_PAGINA, 'posts')
-    return render(request, 'base.html', {'name': user_info.get('sobrenome'), 'conteudo_dinamico': html})
+    return render(request, 'base.html', {'conteudo_dinamico': html})
 
 def get_html_paginacao(tamanho, quantidade_comentarios=5, redirect_page = 'posts', id_post = ''):
     html = '<ul id="paginacao" class="pagination pagination-lg">'
@@ -64,27 +59,21 @@ def show_home(request):
     return render(request, 'base.html', {'conteudo_dinamico':html})
 
 def get_comentarios(request):
-    numero_pagina = request.GET.get('page')
-    
-    if  numero_pagina == None:
-        numero_pagina = 1
+    primeiro_indice, ultimo_indice = get_indices_paginacao(request.GET.get('page'))
     
     html = '<div class="container theme-showcase" role="main"> <div class="row"> <div class="bs-example" data-example-id="panel-without-body-with-table"> <div class="panel panel-default"> <div class="panel-heading">  <div class="pull-right">  <div id="div_btn_group" onclick="showFilters(this)";class="btn-group"><button type="button" class="multiselect dropdown-toggle btn btn-default" data-toggle="dropdown" title=""><i class="glyphicon glyphicon-th icon-th"></i> <b class="caret"></b></button><ul class="multiselect-container dropdown-menu"><li>  <a tabindex="0">    <label class="checkbox">      <input onclick="filter();"type="checkbox" checked="true" value="Positivo" name="check_box" checked>Positivo</label> </a></li> <li><a tabindex="0"> <label class="checkbox"> <input type="checkbox" onclick="filter();" value="Negativo" name="check_box" checked>Negativo </label></a></li><li><a tabindex="0"><label class="checkbox"> <input type="checkbox"  onclick="filter();" value="Neutro" name="check_box" checked>Neutro</label></a></li></ul></div></div><h4>Publicacoes no Facebook</h4></div><table class="table table-stripped"> <thead>  <tr> <th> Usuario </th> <th> Post</th> <th> Classificacao     </th> </tr> </thead> <tbody id="tbody_conteudo">'
     
-    comentarios = get_coments(ACCESS_TOKEN, request.GET.get('id'))
-    
-    ultimo_indice = (QUANTIDADE_PUBLICACOES_PAGINA * int(numero_pagina)) 
-    primeiro_indice = ultimo_indice - QUANTIDADE_PUBLICACOES_PAGINA
+    comentarios = mainController.getComments(ACCESS_TOKEN, request.GET.get('id'))
     
     j = 0
     
     for i in xrange(0, len(comentarios)):
         if i >= primeiro_indice and i < ultimo_indice:
-            html += '<tr><td> <img  src="//graph.facebook.com/'+ comentarios[i]['autor_id']+'/picture?type=large" class="img-circle img-responsive"/><p style="text-align: center">' + comentarios[i]['autor_comentario'] + '</p></td><td>' + comentarios[i]['comentario'] + '</td>' + '<td>' + comentarios[i]['polaridade'] + '</td></tr>'
+            html += '<tr><td> <div class="col-md-6 column"><img  src="//graph.facebook.com/'+ comentarios[i]['autor_id']+'/picture?type=large" style="width: 75px; height: 75px;" class="img-circle "/><p style="text-align: center">' + comentarios[i]['autor_comentario'] + '</p></div></td><td><div class="col-md-6 column">' + comentarios[i]['comentario'] + '</div></td>' + '<td><div class="col-md-6 column">' + comentarios[i]['polaridade'] + '</div></td></tr>'
             j += 1
         if j == QUANTIDADE_PUBLICACOES_PAGINA:
             break        
     html += '</tbody> </table> </div> </div> '                        
     html += get_html_paginacao(len(comentarios), QUANTIDADE_PUBLICACOES_PAGINA, 'comments', request.GET.get('id'))
-    return render(request, 'base.html', {'name': user_info.get('sobrenome'), 'conteudo_dinamico': html})
+    return render(request, 'base.html', {'conteudo_dinamico': html})
 
