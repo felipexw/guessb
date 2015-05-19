@@ -18,7 +18,7 @@ def get_feed(token):
                                          dict(autor_comentario=array_comentarios[i].get('from').get('name'), comentario=array_comentarios[i].get('message')))
             
         autor = data['from']['name'] 
-        autor_id = feed_data.get('data')[i].get('from').get('id','')
+        autor_id = data.get('from').get('id','')
         
         if 'message' in data:
             mensagem = data.get('message')

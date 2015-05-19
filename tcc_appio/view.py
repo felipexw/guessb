@@ -7,7 +7,7 @@ from django.shortcuts import render
 from main_controller import get_feed, get_coments, get_user_info
 
 import math
-ACCESS_TOKEN = 'CAACEdEose0cBAJPASVrlIZASHvbowv0fAQrZBqeawmruAss3aNbUrlSnynUbXQTONf4GsVL3DAFfW0zeYNHDZBFdZCg9fX079JNVJstAKTbdc8X6vA6IrO21umeGIMXvNrpse1yOHkHV5vKGo1y8odancCHZBsPaKGUZBFZCZCksO6Cw6P6ZCoPVAA0x5tHdvtOFkr03vSzqEkseErFdvT5sL'
+ACCESS_TOKEN = 'CAACEdEose0cBAOBfouZBpQRxzpoz14lKxTZAbRxIOm1iIf0kceiGNFAJ9OmG0jhRJoyWT5v9H5rL59aW8xUlDQGizDpNyEKtLKaBRMrGko9YcPQqZCPENbSZBmjVGD188Hfcl5wNxZAHQjZBiUYdeQ5ItMm6MOPFfjl1pNEx3bS46GkXnccY77fVXMERAzviQjvHqnADndmxMZB9SxQukZBD'
 user_info = {}
 QUANTIDADE_PUBLICACOES_PAGINA = 5
 
@@ -80,7 +80,7 @@ def get_comentarios(request):
     
     for i in xrange(0, len(comentarios)):
         if i >= primeiro_indice and i < ultimo_indice:
-            html += '<tr><td> <img src="//graph.facebook.com/'+ comentarios[i]['autor_id']+'/picture?type=large" class="img-circle img-responsive"/><p style="text-align: center">' + comentarios[i]['autor_comentario'] + '</p></td><td>' + comentarios[i]['comentario'] + '</td>' + '<td>' + comentarios[i]['polaridade'] + '</td></tr>'
+            html += '<tr><td> <img  src="//graph.facebook.com/'+ comentarios[i]['autor_id']+'/picture?type=large" class="img-circle img-responsive"/><p style="text-align: center">' + comentarios[i]['autor_comentario'] + '</p></td><td>' + comentarios[i]['comentario'] + '</td>' + '<td>' + comentarios[i]['polaridade'] + '</td></tr>'
             j += 1
         if j == QUANTIDADE_PUBLICACOES_PAGINA:
             break        
