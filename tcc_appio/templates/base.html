@@ -23,6 +23,7 @@
 <script src="//code.jquery.com/jquery-1.11.2.min.js"></script>
 <script src="{% static 'js/sweet-alert.js' %}"></script>
 <script src=""></script>
+<script src="{% static 'js/fb-sdk.js' %}"></script>
 <script src="{% static 'js/filter.js' %}"></script>
 </head>
 
@@ -42,10 +43,10 @@
 				<div class="collapse navbar-collapse"
 					id="bs-example-navbar-collapse-1">
 					<ul class="nav navbar-nav">
-						<li id="btn_sobre" onclick="atualiza_classe(this)"><a
+						<li id="btn_sobre"><a
 							href="../sobre">Sobre</a></li>
-						<li id="btn_posts" onclick="atualiza_classe(this)"><a
-							href="../posts">Posts</a></li>
+						<li id="btn_posts"><a
+							href="../posts" onclick="checkLoginState();">Posts</a></li>
 					</ul>
 				</div>
 

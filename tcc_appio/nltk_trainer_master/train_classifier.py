@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-import argparse, collections, functools, itertools, math, operator, os.path, re, string, sys
+import argparse, functools, collections, itertools, math, operator, os.path, re, string, sys
 import nltk.data
 import nltk_trainer.classification.args
 from nltk.classify import DecisionTreeClassifier, MaxentClassifier, NaiveBayesClassifier
@@ -19,7 +19,7 @@ from nltk_trainer.classification.featx import (bag_of_words, bag_of_words_in_set
 	word_counts, train_test_feats, word_counts_in_set)
 from nltk_trainer.classification.multi import MultiBinaryClassifier
 from enchant.checker import SpellChecker
-
+from .SpellingReplacer import SpellingReplacer
 ########################################
 ## command options & argument parsing ##
 ########################################

@@ -43,7 +43,9 @@ class GenericDAOFacebook(DAO):
                     polaridade = self.getPolaridade(nbClassifier.classify(arrayComentarios[i].get('message','')))
                     
                     novosComentarios.append(
-                                            dict(autor_id=arrayComentarios[i].get('from').get('id'),autor_comentario=arrayComentarios[i].get('from').get('name'), comentario=arrayComentarios[i].get('message',''), polaridade=polaridade))
+                                            dict(autor_id=arrayComentarios[i].get('from').get('id'),
+                                                 autor_comentario=arrayComentarios[i].get('from').get('name'), 
+                                                 comentario=arrayComentarios[i].get('message',''), polaridade=polaridade))
     
         return novosComentarios
 
