@@ -9,8 +9,7 @@ https://docs.djangoproject.com/en/1.7/ref/settings/
 """
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
-import os
-from django.conf.global_settings import TEMPLATE_DIRS
+import os, sys
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
 
