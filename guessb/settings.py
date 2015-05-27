@@ -1,5 +1,5 @@
 """
-Django settings for tcc_appio project.
+Django settings for guessb project.
 
 For more information on this file, see
 https://docs.djangoproject.com/en/1.7/topics/settings/
@@ -9,7 +9,8 @@ https://docs.djangoproject.com/en/1.7/ref/settings/
 """
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
-import os, sys
+import os
+from guessb import nltk_trainer_master
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
 
@@ -28,6 +29,10 @@ ALLOWED_HOSTS = []
 
 TEMPLATE_DIRS = (
     os.path.join(os.path.dirname(__file__), 'templates').replace('\\','/'),
+)
+
+CLASSIFIER_DIR = (
+    os.path.join(os.path.dirname(__file__), 'nltk_trainer_master/data/classifiers/gplay_manualmente_sklearn.MultinomialNB.pickle')        
 )
 
 # Application definition
@@ -51,9 +56,9 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 )
 
-ROOT_URLCONF = 'tcc_appio.urls'
+ROOT_URLCONF = 'guessb.urls'
 
-WSGI_APPLICATION = 'tcc_appio.wsgi.application'
+WSGI_APPLICATION = 'guessb.wsgi.application'
 
 
 # Database
@@ -90,4 +95,3 @@ STATICFILES_DIRS = (
 )
 
     
-

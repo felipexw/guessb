@@ -1,6 +1,6 @@
 from abc import abstractmethod, ABCMeta
 from open_facebook.api import OpenFacebook
-from tcc_appio.nltk_trainer_master.NBClassifierLoader import NBClassifierLoader
+from guessb.nltk_trainer_master.NBClassifierLoader import NBClassifierLoader
 
 class DAOFactory(object):
     __metaclass__ = ABCMeta
