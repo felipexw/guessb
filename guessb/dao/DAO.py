@@ -1,6 +1,7 @@
 from abc import abstractmethod, ABCMeta
 from open_facebook.api import OpenFacebook
 from guessb.nltk_trainer_master.NBClassifierLoader import NBClassifierLoader
+from oauthlib.oauth1.rfc5849.endpoints import access_token
 
 class DAOFactory(object):
     __metaclass__ = ABCMeta
@@ -10,12 +11,12 @@ class DAOFactory(object):
         return FacebookDAOFactory()
     
     @abstractmethod
-    def getGenericDAO(self):pass
+    def getGenericDAO(self, ACCESS_TOKEN):pass
 
 class FacebookDAOFactory(DAOFactory):
     
-    def getGenericDAO(self):
-        return GenericDAOFacebook()    
+    def getGenericDAO(self, ACCESS_TOKEN):
+        return GenericDAOFacebook(ACCESS_TOKEN)    
 
 class DAO:
     __metaclass__ = ABCMeta
@@ -27,25 +28,34 @@ class DAO:
     def getCommentsFeed(self, id):pass
     
 class GenericDAOFacebook(DAO):
-       
-    def getCommentsFeed(self,ACCESS_TOKEN, id):
-        facebookObject = OpenFacebook(ACCESS_TOKEN)
+    
+    def __init__(self, ACCESS_TOKEN):
+        self.ACCESS_TOKEN = ACCESS_TOKEN
+        print self.ACCESS_TOKEN 
+    
+    def getCommentsFeed(self, id):
+        facebookObject = OpenFacebook(self.ACCESS_TOKEN)
         feedData = facebookObject.get('me/feed')
-        arrayComentarios = []
-        novosComentarios = []
+        comments = []
+        content = []
     
         for data in  feedData['data']:
             if data.get('id') == id:
-                arrayComentarios = data.get('comments').get('data')
+                comments = data.get('comments').get('data')
                 
-                for i in xrange(0, len(arrayComentarios)):
-                    nbClassifier = NBClassifierLoader();
-                    polaridade = self.getPolaridade(nbClassifier.classify(arrayComentarios[i].get('message','')))
+                for i in xrange(0, len(comments)):
+                    classifier = NBClassifierLoader();
+                
+                    messageContent = comments[i].get('message', '')
+                    authorName = comments[i].get('from').get('name')
+                    authorId = comments[i].get('from').get('id')
+                    polarity = classifier.classify(messageContent)
                     
-                    novosComentarios.append(
-                                            dict(autor_id=arrayComentarios[i].get('from').get('id'),autor_comentario=arrayComentarios[i].get('from').get('name'), comentario=arrayComentarios[i].get('message',''), polaridade=polaridade))
-    
-        return novosComentarios
+                    content.append(dict(authorId=authorId,
+                                                 authorName=authorName,
+                                                  messageContent=messageContent,
+                                                   polarity=self.getPolaridade(polarity)))
+        return content
 
     
     def getPolaridade(self, polaridade):
@@ -57,17 +67,21 @@ class GenericDAOFacebook(DAO):
     
         return'Negativo'
     
-    def getFeed(self, ACCESS_TOKEN):
-        facebookObject = OpenFacebook(ACCESS_TOKEN)
+    def getFeed(self):
+        facebookObject = OpenFacebook(self.ACCESS_TOKEN)
         feedData = facebookObject.get('me/feed')
-        arrayConteudo = []
+        content = []
         
         for data in feedData['data']:
             if not 'comments' in data:
                 continue
             else:
-                arrayConteudo.append(
-                                     dict(autor_id=data.get('from').get('id'), autor=data.get('from').get('name',''), 
-                                          mensagem=data.get('message','(Postagem sem texto)'), link=data.get('link'), id=data.get('id')))
+                content.append(
+                               dict(authorId=data.get('from').get('id'),
+                                    authorName=data.get('from').get('name', ''),
+                                    messageContent=data.get('message',
+                                                       '(Postagem sem texto)'),
+                                    link=data.get('link'),
+                                    postId=data.get('id')))
         
-        return arrayConteudo
+        return content

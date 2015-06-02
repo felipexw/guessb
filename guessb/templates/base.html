@@ -8,13 +8,14 @@
 <meta name="author" content="Felipe Appio">
 <link rel="icon" href="../../favicon.ico">
 <style type="text/css">
-.table th, td{
+.table th, td {
 	text-align: center;
 }
-p{
+
+p {
 	font-size: 15px;
 }
- </style>
+</style>
 <title>Guessb</title> {% load staticfiles %}
 <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
 <link href="{% static 'css/signin.css' %}" rel="stylesheet">
@@ -30,30 +31,83 @@ p{
 </head>
 
 <body onload="update();">
+
+<!-- 	<script> -->
+// 		function statusChangeCallback(response) 
+// 			if (response.status === 'connected')
+// 				showPosts(response.authResponse);		
+
+// 		function checkLoginState() {
+// 			FB.getLoginStatus(function(response) {
+// 				statusChangeCallback(response);
+// 			});
+// 		}
+
+// 		window.fbAsyncInit = function() {
+// 			FB.init({
+// 				appId : '787895154627678',
+// 				cookie : true,  
+// 				xfbml : true,
+// 				version : 'v2.2'
+// 			});
+
+// 			FB.getLoginStatus(function(response) {
+// 				statusChangeCallback(response);
+// 			});
+//  		};
+
+// 		(function(d, s, id) {
+// 			var js, fjs = d.getElementsByTagName(s)[0];
+// 			if (d.getElementById(id))
+// 				return;
+// 			js = d.createElement(s);
+// 			js.id = id;
+// 			js.src = "//connect.facebook.net/en_US/sdk.js";
+// 			fjs.parentNode.insertBefore(js, fjs);
+// 		}(document, 'script', 'facebook-jssdk'));
+<!-- 	</script> -->
+
 	<div class="container">
 		<div class="row clearfix">
 			<img alt="Banner" src="{% static 'images/hero_guessb.fw.png' %}"
 				style="width: 100%" class="img-rounded">
 			<nav class="navbar navbar-default" role="navigation">
-				<div class="navbar-header">
-					<a class="navbar-brand" href="../"> <img alt="Logo"
-						src="{% static 'images/logo.png' %}"
-						style="max-height: 30px; max-width: 120px;">
-					</a>
-				</div>
+				<div class="container-fluid">
+					<div class="navbar-header">
+						<button type="button" class="navbar-toggle collapsed"
+							onclick="showNavbar()" data-toggle="collapse"
+							data-target="#navbar" aria-expanded="false"
+							aria-controls="navbar">
+							<span class="sr-only">Toggle navigation</span> <span
+								class="icon-bar"></span> <span class="icon-bar"></span> <span
+								class="icon-bar"></span>
+						</button>
+						<a class="navbar-brand" href="../"> <img alt="Logo"
+							src="{% static 'images/logo.png' %}"
+							style="max-height: 30px; max-width: 120px;">
+						</a>
+					</div>
 
-				<div class="collapse navbar-collapse"
-					id="bs-example-navbar-collapse-1">
-					<ul class="nav navbar-nav">
-						<li id="btn_sobre" onclick="atualiza_classe(this)"><a
-							href="../sobre">Sobre</a></li>
-						<li id="btn_posts" onclick="atualiza_classe(this)"><a
-							href="../posts">Posts</a></li>
-					</ul>
-				</div>
+					<div id="navbar" class="collapse navbar-collapse"
+						aria-expanded="true">
+						<ul class="nav navbar-nav">
+							<li id="btn_sobre" onclick="showAbout()"><a
+								href="javascript:void(0)">Sobre</a></li>
+							<li id="btn_posts" onclick="showPosts('CAACEdEose0cBAHp6iAMIhSjGGPcNJjQ9srCViTG6O7t8DJHFpmnhtZAVtOGuVt48VpFM2ZB3yTIN6hEAAMo1CK4Y7UVZAvbnEsbrs14x7SfcHTVjCALAk9DXVPQbeEAjcQ0hbSc6dmDv5ShxxihCPNMosC9A2HRL2Ga4X4gdZBSM5xgHZB6MJ81ZBnvb8Y5ohZCnsdWU5ZAODeZCrzZCNF1Fmiz9lQxk03LYgZD', 1)"><a href="javascript:void(0)"> 
+<!-- 							  <fb:login-button -->
+<!-- 								scope="public_profile,user_friends, -->
+<!-- 								 user_status, user_photos, user_posts, -->
+<!-- 								  user_videos" onlogin="checkLoginState();"> -->
+<!-- 									Posts </fb:login-button> -->
+									Posts
+							</a></li>
+						</ul>
+					</div>
 
+
+				</div>
 			</nav>
-			{{conteudo_dinamico|safe }}
+			<div id="content">{{conteudo_dinamico|safe }}</div>
 
 		</div>
 
@@ -64,7 +118,7 @@ p{
 				<ul class="bs-docs-footer-links text-muted">
 					<li>Versão v0.1</li>
 					<li>·</li>
-					<li><a href="https://github.com/felipexw/tcc-appio">GitHub</a></li>
+					<li><a href="https://github.com/felipexw/guessb">GitHub</a></li>
 					<li>·</li>
 				</ul>
 			</div>

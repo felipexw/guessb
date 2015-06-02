@@ -10,7 +10,7 @@ https://docs.djangoproject.com/en/1.7/ref/settings/
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 import os
-from guessb import nltk_trainer_master
+
 BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 
 
@@ -51,7 +51,7 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
+    #'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 )
@@ -84,14 +84,12 @@ USE_L10N = True
 
 USE_TZ = True
 
-
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/1.7/howto/static-files/
-
+SESSION_COOKIE_AGE = 3600
 STATIC_URL = '/static/'
 
 STATICFILES_DIRS = (
     os.path.join(os.path.dirname(__file__), 'static').replace('\\','/'),
 )
 
-    
+SESSION_ENGINE='django.contrib.sessions.backends.file'    
+

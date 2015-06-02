@@ -13,42 +13,42 @@ function containsValue(value) {
 	return false;
 }
 
-function isValueSelected(value){
+function isValueSelected(value) {
 	var filters = document.getElementsByName('check_box');
-	
-	for(var i = 0; i < filters.length; i++)
+
+	for (var i = 0; i < filters.length; i++)
 		if (filters[i].value == value && filters[i].checked)
 			return true;
-	
+
 	return false;
 }
 
-function filter(){
+function filter() {
 	var filters = document.getElementsByName('check_box');
-	
-	for(var i = 0; i < filters.length; i++)
-		processFilter(filters[i].value);	
+
+	for (var i = 0; i < filters.length; i++)
+		processFilter(filters[i].value);
 }
 
-function isNothingSelected(){
+function isNothingSelected() {
 	var filters = document.getElementsByName('check_box');
-	
-	for(var i = 0; i < filters.length; i++)
+
+	for (var i = 0; i < filters.length; i++)
 		if (filters[i].checked)
 			return false;
 	return true;
 }
 
-function processFilter(value){
+function processFilter(value) {
 	var tableChildrens = $('#tbody_conteudo').children();
 
 	for (var i = 0; i < tableChildrens.length; i++) {
 		if (isNothingSelected())
-			tableChildrens[i].style.display="none"
+			tableChildrens[i].style.display = "none"
 
 		else
 			for (var j = 0; j < tableChildrens.length; j++) {
-				if (isValueSelected(tableChildrens[i].childNodes[tableChildrens[i].childNodes.length-1].textContent))
+				if (isValueSelected(tableChildrens[i].childNodes[tableChildrens[i].childNodes.length - 1].textContent))
 					tableChildrens[i].style.display = "";
 				else
 					tableChildrens[i].style.display = "none"
@@ -64,6 +64,7 @@ function update() {
 		document.getElementById('btn_posts').className = 'active';
 		document.getElementById('btn_sobre').className = '';
 		break;
+
 	case 'sobre':
 		document.getElementById('btn_sobre').className = 'active';
 		document.getElementById('btn_posts').className = '';
@@ -71,7 +72,9 @@ function update() {
 	}
 	updatePagina();
 }
-function updatePagina() {
+/*
+ *  
+ *function updatePagina() {
 	regExp = new RegExp('page=[0-9]');
 	if (document.URL.match(regExp)) {
 		numeroPagina = document.URL.match(regExp)[0].split('=')[1];
@@ -90,83 +93,74 @@ function updatePagina() {
 		document.getElementById('paginacao').childNodes[0].className = 'active';
 	}
 }
+ 
+ */
 
-
-// This is called with the results from from FB.getLoginStatus().
-function statusChangeCallback(response) {
-  console.log('statusChangeCallback');
-  console.log(response);
-  // The response object is returned with a status field that lets the
-  // app know the current login status of the person.
-  // Full docs on the response object can be found in the documentation
-  // for FB.getLoginStatus().
-  if (response.status === 'connected') {
-    // Logged into your app and Facebook.
-    testAPI();
-  } else if (response.status === 'not_authorized') {
-    // The person is logged into Facebook, but not your app.
-    document.getElementById('status').innerHTML = 'Please log ' +
-      'into this app.';
-  } else {
-    // The person is not logged into Facebook, so we're not sure if
-    // they are logged into this app or not.
-    document.getElementById('status').innerHTML = 'Please log ' +
-      'into Facebook.';
-  }
+function showCommentsFromPost(link, postId, page) {
+	$.ajax({
+		type : "GET",
+		url : "../" + link + "/",
+		data : {
+			ACCESS_TOKEN : authResponse,
+			postId : postId,
+			page : page
+		},
+		success : function(response) {
+			$("#content").html(response);
+		}
+	});
 }
 
-// This function is called when someone finishes with the Login
-// Button.  See the onlogin handler attached to it in the sample
-// code below.
-function checkLoginState() {
-  FB.getLoginStatus(function(response) {
-    statusChangeCallback(response);
-  });
+function showNavbar() {
+	var navbar = document.getElementById('navbar');
+
+	if (navbar.className == 'collapse navbar-collapse in')
+		navbar.className = 'collapse navbar-collapse';
+
+	else
+		navbar.className = 'collapse navbar-collapse in';
 }
 
-window.fbAsyncInit = function() {
-FB.init({
-  appId      : '787895154627678',
-  cookie     : true,  // enable cookies to allow the server to access 
-                      // the session
-  xfbml      : true,  // parse social plugins on this page
-  version    : 'v2.2' // use version 2.2
-});
-
-// Now that we've initialized the JavaScript SDK, we call 
-// FB.getLoginStatus().  This function gets the state of the
-// person visiting this page and can return one of three states to
-// the callback you provide.  They can be:
-//
-// 1. Logged into your app ('connected')
-// 2. Logged into Facebook, but not your app ('not_authorized')
-// 3. Not logged into Facebook and can't tell if they are logged into
-//    your app or not.
-//
-// These three cases are handled in the callback function.
-
-FB.getLoginStatus(function(response) {
-  statusChangeCallback(response);
-});
-
-};
-
-// Load the SDK asynchronously
-(function(d, s, id) {
-  var js, fjs = d.getElementsByTagName(s)[0];
-  if (d.getElementById(id)) return;
-  js = d.createElement(s); js.id = id;
-  js.src = "//connect.facebook.net/en_US/sdk.js";
-  fjs.parentNode.insertBefore(js, fjs);
-}(document, 'script', 'facebook-jssdk'));
-
-// Here we run a very simple test of the Graph API after login is
-// successful.  See statusChangeCallback() for when this call is made.
-function testAPI() {
-  console.log('Welcome!  Fetching your information.... ');
-  FB.api('/me', function(response) {
-    console.log('Successful login for: ' + response.name);
-    document.getElementById('status').innerHTML =
-      'Thanks for logging in, ' + response.name + '!';
-  });
+function showPosts(authResponse, page) {
+	debugger;
+	$.ajax({
+		type : "GET",
+		url : "../posts/",
+		data : {
+			ACCESS_TOKEN : authResponse,
+			page : page
+		},
+		success : function(response) {
+			$("#content").html(response);
+		},
+		error: function (request, status, error) {
+	        $("#content").html();
+	    }
+	});
 }
+
+function showCommentsFromPosts(page, postId){
+	debugger;
+	$.ajax({
+		type : "GET",
+		url : "../comments/",
+		data : {
+			page : page,
+			postId: postId
+		},
+		success : function(response) {
+			$("#content").html(response);
+		}
+	});
+}
+
+function showAbout(){
+	$.ajax({
+		type : "GET",
+		url : "../sobre/",
+		success : function(response) {
+			$("#content").html(response);
+		},		
+	});
+}
+
