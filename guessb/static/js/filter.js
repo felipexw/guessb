@@ -122,7 +122,6 @@ function showNavbar() {
 }
 
 function showPosts(authResponse, page) {
-	debugger;
 	$.ajax({
 		type : "GET",
 		url : "../posts/",

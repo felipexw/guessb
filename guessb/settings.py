@@ -84,7 +84,6 @@ USE_L10N = True
 
 USE_TZ = True
 
-SESSION_COOKIE_AGE = 3600
 STATIC_URL = '/static/'
 
 STATICFILES_DIRS = (

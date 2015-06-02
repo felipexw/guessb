@@ -22,10 +22,10 @@ class DAO:
     __metaclass__ = ABCMeta
     
     @abstractmethod
-    def getFeed(self):pass
+    def getFeed(self, firstIndex, lastIndex):pass
     
     @abstractmethod
-    def getCommentsFeed(self, id):pass
+    def getCommentsFeed(self, id, firstIndex, lastIndex):pass
     
 class GenericDAOFacebook(DAO):
     
@@ -33,29 +33,40 @@ class GenericDAOFacebook(DAO):
         self.ACCESS_TOKEN = ACCESS_TOKEN
         print self.ACCESS_TOKEN 
     
-    def getCommentsFeed(self, id):
+    def getCommentsFeed(self, id, firstIndex, lastIndex):
         facebookObject = OpenFacebook(self.ACCESS_TOKEN)
         feedData = facebookObject.get('me/feed')
         comments = []
         content = []
-    
-        for data in  feedData['data']:
-            if data.get('id') == id:
-                comments = data.get('comments').get('data')
+        
+        commentsLength = 0
+        
+        classifier = NBClassifierLoader();
+        finished = False
+        
+        for i in  xrange(0, len(feedData['data'])):
+            if finished:
+                break
+           
+            if (feedData['data'][i].get('id') == id):
+                finished = True
                 
-                for i in xrange(0, len(comments)):
-                    classifier = NBClassifierLoader();
-                
-                    messageContent = comments[i].get('message', '')
-                    authorName = comments[i].get('from').get('name')
-                    authorId = comments[i].get('from').get('id')
-                    polarity = classifier.classify(messageContent)
+                comments = feedData['data'][i].get('comments').get('data')
+                commentsLength = len(comments)
+               
+                for j in xrange(0, commentsLength):
+                    if (j >= firstIndex) and (j < lastIndex):
+                        messageContent = comments[j].get('message', '')
+                        authorName = comments[j].get('from').get('name')
+                        authorId = comments[j].get('from').get('id')
+                        polarity = classifier.classify(messageContent)
                     
-                    content.append(dict(authorId=authorId,
-                                                 authorName=authorName,
-                                                  messageContent=messageContent,
-                                                   polarity=self.getPolaridade(polarity)))
-        return content
+                        content.append(dict(authorId=authorId,
+                                                            authorName=authorName,
+                                                            messageContent=messageContent,
+                                                            polarity=self.getPolaridade(polarity)))
+                        
+        return content, commentsLength
 
     
     def getPolaridade(self, polaridade):
@@ -67,21 +78,19 @@ class GenericDAOFacebook(DAO):
     
         return'Negativo'
     
-    def getFeed(self):
+    def getFeed(self, firstIndex, lastIndex):
         facebookObject = OpenFacebook(self.ACCESS_TOKEN)
         feedData = facebookObject.get('me/feed')
         content = []
         
         for data in feedData['data']:
-            if not 'comments' in data:
-                continue
-            else:
+            if 'comments' in data:
                 content.append(
                                dict(authorId=data.get('from').get('id'),
                                     authorName=data.get('from').get('name', ''),
                                     messageContent=data.get('message',
-                                                       '(Postagem sem texto)'),
+                                                                      '(Postagem sem texto)'),
                                     link=data.get('link'),
                                     postId=data.get('id')))
-        
+                 
         return content
