@@ -1,7 +1,7 @@
 from abc import abstractmethod, ABCMeta
 from open_facebook.api import OpenFacebook
-from guessb.nltk_trainer_master.NBClassifierLoader import NBClassifierLoader
-from oauthlib.oauth1.rfc5849.endpoints import access_token
+from guessb.dao.NBClassifierLoader import NBClassifierLoader
+
 
 class DAOFactory(object):
     __metaclass__ = ABCMeta
@@ -29,28 +29,18 @@ class DAO:
     
 class GenericDAOFacebook(DAO):
     
-    def __init__(self, ACCESS_TOKEN):
-        self.ACCESS_TOKEN = ACCESS_TOKEN
-        print self.ACCESS_TOKEN 
+    def __init__(self, accessToken):
+        self._accessToken_ = accessToken        
     
     def getCommentsFeed(self, id, firstIndex, lastIndex):
-        facebookObject = OpenFacebook(self.ACCESS_TOKEN)
+        facebookObject = OpenFacebook(self._accessToken_)
         feedData = facebookObject.get('me/feed')
-        comments = []
         content = []
-        
         commentsLength = 0
-        
-        classifier = NBClassifierLoader();
-        finished = False
+        classifier = NBClassifierLoader()
         
         for i in  xrange(0, len(feedData['data'])):
-            if finished:
-                break
-           
             if (feedData['data'][i].get('id') == id):
-                finished = True
-                
                 comments = feedData['data'][i].get('comments').get('data')
                 commentsLength = len(comments)
                
@@ -59,17 +49,17 @@ class GenericDAOFacebook(DAO):
                         messageContent = comments[j].get('message', '')
                         authorName = comments[j].get('from').get('name')
                         authorId = comments[j].get('from').get('id')
-                        polarity = classifier.classify(messageContent)
-                    
-                        content.append(dict(authorId=authorId,
-                                                            authorName=authorName,
-                                                            messageContent=messageContent,
-                                                            polarity=self.getPolaridade(polarity)))
-                        
+                        polarity = self.getPolarity(classifier.classify(messageContent))
+                        content.append(dict(
+                                        authorId=authorId,
+                                        authorName=authorName,
+                                        messageContent=messageContent,
+                                        polarity=polarity))
+                break        
         return content, commentsLength
 
     
-    def getPolaridade(self, polaridade):
+    def getPolarity(self, polaridade):
         if (polaridade == 'neu'):
             return 'Neutro'
     
@@ -79,18 +69,46 @@ class GenericDAOFacebook(DAO):
         return'Negativo'
     
     def getFeed(self, firstIndex, lastIndex):
-        facebookObject = OpenFacebook(self.ACCESS_TOKEN)
+        facebookObject = OpenFacebook(self._accessToken_)
         feedData = facebookObject.get('me/feed')
         content = []
+        profileName = facebookObject.get('me').get('name')
+        profileId = facebookObject.get('me').get('id')
         
         for data in feedData['data']:
             if 'comments' in data:
                 content.append(
-                               dict(authorId=data.get('from').get('id'),
+                               dict(profileName=profileName,
+                                    profileId=profileId,
+                                    authorId=data.get('from').get('id'),
                                     authorName=data.get('from').get('name', ''),
                                     messageContent=data.get('message',
-                                                                      '(Postagem sem texto)'),
-                                    link=data.get('link'),
+                                                            '(Postagem sem texto)'),
+                                    link=data.get('link', '#'),
                                     postId=data.get('id')))
-                 
+        
+        self.getFeedPage(content)         
         return content
+
+    def getFeedPage(self, content):
+        facebookObject = OpenFacebook(self._accessToken_)
+        accountData = facebookObject.get('me/accounts')
+        pages = accountData.get('data')
+        
+        for page in pages:
+            pageAccessToken = page.get('access_token')
+            facebookObject = OpenFacebook(pageAccessToken)
+            feedData = facebookObject.get('me/feed')
+            profile = facebookObject.get('me')        
+            
+            for data in feedData['data']:
+                if 'comments' in data:
+                    content.append(dict(profileName=profile.get('name'),
+                                        profileId=profile.get('id'),
+                                        authorId=data.get('from').get('id'),
+                                        authorName=data.get('from').get('name', ''),
+                                        messageContent=data.get('message',
+                                                                '(Postagem sem texto)'),
+                                        link=data.get('link', '#'),
+                                        postId=data.get('id'),
+                                        accessToken=pageAccessToken))                                
