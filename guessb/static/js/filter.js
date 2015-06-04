@@ -1,3 +1,5 @@
+timer = undefined;
+
 function showFilters(element) {
 	if (element.className == 'btn-group open')
 		element.className = 'btn-group';
@@ -122,18 +124,22 @@ function showNavbar() {
 }
 
 function showPosts(authResponse, page) {
+	debugger;
 	$.ajax({
 		type : "GET",
 		url : "../posts/",
 		data : {
 			ACCESS_TOKEN : authResponse,
 			page : page
+		},beforeSend: function(){
+			progressBar();			
 		},
 		success : function(response) {
 			$("#content").html(response);
+			finishWidthProgressBar();
 		},
 		error: function (request, status, error) {
-	        $("#content").html();
+	        finishWidthProgressBar();
 	    }
 	});
 }
@@ -147,8 +153,12 @@ function showCommentsFromPosts(page, postId){
 			page : page,
 			postId: postId
 		},
+		beforeSend: function(){
+			progressBar();
+		},
 		success : function(response) {
 			$("#content").html(response);
+			finishWidthProgressBar();
 		}
 	});
 }
@@ -162,4 +172,21 @@ function showAbout(){
 		},		
 	});
 }
+	
+function progressBar(){
+	document.getElementsByClassName('progress-bar progress-bar-success progress-bar-striped active')[0].style.width="35%"
+	$('.loader').fadeIn(1500);	
+	updateWidthProgressBar();
+}
 
+function updateWidthProgressBar(){
+	var width = parseInt(document.getElementsByClassName('progress-bar progress-bar-success progress-bar-striped active')[0].style.width.replace('%',''))+10;
+	document.getElementsByClassName('progress-bar progress-bar-success progress-bar-striped active')[0].style.width=width+"%";
+}
+
+function finishWidthProgressBar(){
+	$('.loader').fadeOut(1500);
+	document.getElementsByClassName('progress-bar progress-bar-success progress-bar-striped active')[0].style.width="100%";
+	clearTimeout(timer);
+	timer = undefined;
+}

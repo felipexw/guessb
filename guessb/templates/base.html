@@ -7,17 +7,9 @@
 <meta name="description" content="">
 <meta name="author" content="Felipe Appio">
 <link rel="icon" href="../../favicon.ico">
-<style type="text/css">
-.table th, td {
-	text-align: center;
-}
-
-p {
-	font-size: 15px;
-}
-</style>
 <title>Guessb</title> {% load staticfiles %}
 <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
+<link href="{% static 'css/base.css' %}" rel="stylesheet">
 <link href="{% static 'css/signin.css' %}" rel="stylesheet">
 <link href="{% static 'css/bootstrap-theme.min.css' %}" rel="stylesheet">
 <link href="{% static 'css/home_theme.css' %}" rel="stylesheet">
@@ -32,41 +24,29 @@ p {
 
 <body onload="update();">
 
-<!-- 	<script> -->
-// 		function statusChangeCallback(response) 
-// 			if (response.status === 'connected')
-// 				showPosts(response.authResponse);		
-
-// 		function checkLoginState() {
-// 			FB.getLoginStatus(function(response) {
-// 				statusChangeCallback(response);
-// 			});
-// 		}
-
-// 		window.fbAsyncInit = function() {
-// 			FB.init({
-// 				appId : '787895154627678',
-// 				cookie : true,  
-// 				xfbml : true,
-// 				version : 'v2.2'
-// 			});
-
-// 			FB.getLoginStatus(function(response) {
-// 				statusChangeCallback(response);
-// 			});
-//  		};
-
-// 		(function(d, s, id) {
-// 			var js, fjs = d.getElementsByTagName(s)[0];
-// 			if (d.getElementById(id))
-// 				return;
-// 			js = d.createElement(s);
-// 			js.id = id;
-// 			js.src = "//connect.facebook.net/en_US/sdk.js";
-// 			fjs.parentNode.insertBefore(js, fjs);
-// 		}(document, 'script', 'facebook-jssdk'));
-<!-- 	</script> -->
-
+	<!-- 	<script> -->
+	// function statusChangeCallback(response) // if (response.status ===
+	'connected') // showPosts(response.authResponse); // function
+	checkLoginState() { // FB.getLoginStatus(function(response) { //
+	statusChangeCallback(response); // }); // } // window.fbAsyncInit =
+	function() { // FB.init({ // appId : '787895154627678', // cookie :
+	true, // xfbml : true, // version : 'v2.2' // }); //
+	FB.getLoginStatus(function(response) { //
+	statusChangeCallback(response); // }); // }; // (function(d, s, id) {
+	// var js, fjs = d.getElementsByTagName(s)[0]; // if
+	(d.getElementById(id)) // return; // js = d.createElement(s); // js.id
+	= id; // js.src = "//connect.facebook.net/en_US/sdk.js"; //
+	fjs.parentNode.insertBefore(js, fjs); // }(document, 'script',
+	'facebook-jssdk'));
+	<!-- 	</script> -->
+	<div class="loader">
+		<div class="progress">
+			<div
+				class="progress-bar progress-bar-success progress-bar-striped active"
+				role="progressbar" aria-valuenow="40" aria-valuemin="0"
+				aria-valuemax="100" style="width: 33%"></div>
+		</div>
+	</div>
 	<div class="container">
 		<div class="row clearfix">
 			<img alt="Banner" src="{% static 'images/hero_guessb.fw.png' %}"
@@ -93,12 +73,11 @@ p {
 						<ul class="nav navbar-nav">
 							<li id="btn_sobre" onclick="showAbout()"><a
 								href="javascript:void(0)">Sobre</a></li>
-							<li id="btn_posts" onclick="showPosts('CAACEdEose0cBANEO8clA4gKG8lhYouGia51TbW0BDnvdh3kFYREmTmxHiI7MoiKqygiNtZBmVhrVUrtL6kq9nGdBCdjh9WPRk8k2HnJoI6yZBIFzeed3WQ45XVnc6YUOmFl5LVcbw7EWkUWxS30SgmAsZAXZAocmF7oPrFUSk6JwMaalkeWhaB0O2W5tLnZCmfZAly0lQGtuHMR9pQLG9qeoLxc8IaJOcZD', 1)"><a href="javascript:void(0)"> 
-<!-- 							  <fb:login-button -->
-<!-- 								scope="public_profile,user_friends, -->
-<!-- 								 user_status, user_photos, user_posts, -->
-<!-- 								  user_videos" onlogin="checkLoginState();"> -->
-<!-- 									Posts </fb:login-button> -->
+							<li id="btn_posts"
+								onclick="showPosts('CAACEdEose0cBABMrWg58J1rwBZAXtoR4yYWSjPlYfj99L3QMjO2dB4ZC15HAWC3jv0U4s1Ocj3pZBRgpOYiwpRCZBw6R7v0cBOvpbE4hpaeICbXheEQrlAtnjZBnWNtfFq1GQ2hkjKwcsFLHuuiSLgZA0bjI9oJc7UQyrhXkbVKYpKPZCA2FXhTMoNTAQwZAjRoKQXVmXLV2nZA90UJQL1hR0nREI1O7jM2IZD', 1)"><a
+								href="javascript:void(0)"> <!-- 							  <fb:login-button -->
+									<!-- 								scope="public_profile,user_friends, --> <!-- 								 user_status, user_photos, user_posts, -->
+									<!-- 								  user_videos" onlogin="checkLoginState();"> --> <!-- 									Posts </fb:login-button> -->
 									Posts
 							</a></li>
 						</ul>

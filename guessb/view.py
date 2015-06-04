@@ -111,6 +111,16 @@ def __getAccessTokenPostIt(request, postId):
     
     return request.session.get('ACCESS_TOKEN')
 
+def getNumberPostsPerPage(totalNumberComments):
+    html = '<div class="btn-group "> <button type="button" class="btn btn-default dropdown-toggle open" data-toggle="dropdown" aria-expanded="false">Exibir<span class="caret"></span>  </button>  <ul class="dropdown-menu" role="menu">  ' 
+    
+    i = 5
+    while i < totalNumberComments:
+        html += '<li><a href="javascript:void(0)">' + i + '</a></li>'
+    
+    html += '</ul></div>'
+    return html
+
 def showComments(request):
     firstIndex, lastIndex = getPaginationIndexes(request.GET.get('page'))
     
