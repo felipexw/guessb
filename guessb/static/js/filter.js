@@ -1,6 +1,6 @@
 timer = undefined;
 
-function showFilters(element) {
+function updateStatusButtonGroup(element) {
 	if (element.className == 'btn-group open')
 		element.className = 'btn-group';
 	else
@@ -74,30 +74,6 @@ function update() {
 	}
 	updatePagina();
 }
-/*
- *  
- *function updatePagina() {
-	regExp = new RegExp('page=[0-9]');
-	if (document.URL.match(regExp)) {
-		numeroPagina = document.URL.match(regExp)[0].split('=')[1];
-		objetoPaginacao = document.getElementById('paginacao');
-		childNodes = objetoPaginacao.childNodes;
-
-		for (i = 0; i < childNodes.length; i++) {
-			if (i + 1 != numeroPagina) {
-				childNodes[i].className = '';
-			} else {
-				childNodes[i].className = 'active';
-			}
-		}
-
-	} else {
-		document.getElementById('paginacao').childNodes[0].className = 'active';
-	}
-}
- 
- */
-
 function showCommentsFromPost(link, postId, page) {
 	$.ajax({
 		type : "GET",
@@ -144,6 +120,29 @@ function showPosts(authResponse, page) {
 	});
 }
 
+function showPostsPerNumber(authResponse, page, totalNumberPosts) {
+	debugger;
+	$.ajax({
+		type : "GET",
+		url : "../posts/",
+		data : {
+			ACCESS_TOKEN : authResponse,
+			page : page, 
+			totalNumberPosts : totalNumberPosts
+		},beforeSend: function(){
+			progressBar();			
+		},
+		success : function(response) {
+			$("#content").html(response);
+			finishWidthProgressBar();
+		},
+		error: function (request, status, error) {
+	        finishWidthProgressBar();
+	    }
+	});
+}
+
+
 function showCommentsFromPosts(page, postId){
 	debugger;
 	$.ajax({
@@ -162,6 +161,8 @@ function showCommentsFromPosts(page, postId){
 		}
 	});
 }
+
+
 
 function showAbout(){
 	$.ajax({
