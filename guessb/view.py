@@ -13,14 +13,17 @@ def showAbout(request):
     return HttpResponse(html)
 
 def getPaginationIndexes(pageNumber, numberPostsPage):
-    if numberPostsPage == None:
-        numberPostsPage = 10
+    try:
+        if numberPostsPage == None:
+            numberPostsPage = 10
     
-    if  pageNumber == None:
-        pageNumber = 1
+        if  pageNumber == None:
+            pageNumber = 1
     
-    lastIndex = math.fabs((int(numberPostsPage) * int(pageNumber)))
-    firstIndex = math.fabs(lastIndex - int(numberPostsPage))
+        lastIndex = math.fabs((int(numberPostsPage) * int(pageNumber)))
+        firstIndex = math.fabs(int(lastIndex) - int(numberPostsPage))
+    except Exception as e:
+        print e
     return firstIndex, lastIndex, numberPostsPage
 
 def __checkCookie(request):
@@ -114,23 +117,23 @@ def __getAccessTokenPostIt(request, postId):
     return request.session.get('ACCESS_TOKEN')
 
 def showComments(request):
-    firstIndex, lastIndex, numberPostsPage = getPaginationIndexes(request.GET.get('page'))
-    
-    html = '<div class="container theme-showcase" role="main"> <div class="row"> <div class="bs-example" data-example-id="panel-without-body-with-table"> <div class="panel panel-default"> <div class="panel-heading">  <div class="pull-right">  <div id="div_btn_group" onclick="updateStatusButtonGroup(this)";class="btn-group"><button type="button" class="multiselect dropdown-toggle btn btn-default" data-toggle="dropdown" title=""><i class="glyphicon glyphicon-th icon-th"></i> <b class="caret"></b></button><ul class="multiselect-container dropdown-menu"><li>  <a tabindex="0">    <label class="checkbox">      <input onclick="filter();"type="checkbox" checked="true" value="Positivo" name="check_box" checked>Positivo</label> </a></li> <li><a tabindex="0"> <label class="checkbox"> <input type="checkbox" onclick="filter();" value="Negativo" name="check_box" checked>Negativo </label></a></li><li><a tabindex="0"><label class="checkbox"> <input type="checkbox"  onclick="filter();" value="Neutro" name="check_box" checked>Neutro</label></a></li></ul></div></div><h4>Publicacoes no Facebook</h4></div><table class="table table-hover"> <thead>  <tr> <th> Autor </th> <th> Publicacao</th> <th> Classificacao     </th> </tr> </thead> <tbody id="tbody_conteudo">'
-    
-    response = HttpResponse()
-    
-    __checkCookie(request)
-    content = []
+    html = '' 
     
     try:
+        firstIndex, lastIndex, numberPostsPage = getPaginationIndexes(request.GET.get('page'), request.GET.get('totalNumberPosts'))
+        html = '<div class="container theme-showcase" role="main"> <div class="row"> <div class="bs-example" data-example-id="panel-without-body-with-table"> <div class="panel panel-default"> <div class="panel-heading">  <div class="pull-right">  <div id="div_btn_group" onclick="updateStatusButtonGroup(this)";class="btn-group"><button type="button" class="multiselect dropdown-toggle btn btn-default" data-toggle="dropdown" title=""><i class="glyphicon glyphicon-th icon-th"></i> <b class="caret"></b></button><ul class="multiselect-container dropdown-menu"><li>  <a tabindex="0">    <label class="checkbox">      <input onclick="filter();"type="checkbox" checked="true" value="Positivo" name="check_box" checked>Positivo</label> </a></li> <li><a tabindex="0"> <label class="checkbox"> <input type="checkbox" onclick="filter();" value="Negativo" name="check_box" checked>Negativo </label></a></li><li><a tabindex="0"><label class="checkbox"> <input type="checkbox"  onclick="filter();" value="Neutro" name="check_box" checked>Neutro</label></a></li></ul></div></div><h4>Publicacoes no Facebook</h4></div><table class="table table-hover"> <thead>  <tr> <th> Autor </th> <th> Publicacao</th> <th> Classificacao     </th> </tr> </thead> <tbody id="tbody_conteudo">'
+    
+        response = HttpResponse()
+    
+        __checkCookie(request)
+        content = []
+    
         factory = DAOFactory.getDAOFactory()
         accessToken = __getAccessTokenPostIt(request, request.GET.get('postId'))
         content, contentLength = factory.getGenericDAO(accessToken).getCommentsFeed(request.GET.get('postId'), firstIndex, lastIndex)
-        
-    except:
+    except Exception as e:
         html = '<div id="jumbotron" class="jumbotron"> <p>Sua sessão no Facebook expirou. Por favor, conecte-se novamente.</p></div>'
-    
+        print e
     else:
         for i in xrange(0, len(content)):
             html += '<tr><td> <img  src="//graph.facebook.com/' + content[i]['authorId'] + '/picture?type=large" style="width: 75px; height: 75px;" class="img-circle "/><p style="text-align: center">' + content[i]['authorName'] + '</p></td><td>' + content[i]['messageContent'] + '</td>' + '<td>' + content[i]['polarity'] + '</td></tr>'

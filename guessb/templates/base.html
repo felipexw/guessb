@@ -24,21 +24,74 @@
 
 <body onload="update();">
 
-	<!-- 	<script> -->
-	// function statusChangeCallback(response) // if (response.status ===
-	'connected') // showPosts(response.authResponse); // function
-	checkLoginState() { // FB.getLoginStatus(function(response) { //
-	statusChangeCallback(response); // }); // } // window.fbAsyncInit =
-	function() { // FB.init({ // appId : '787895154627678', // cookie :
-	true, // xfbml : true, // version : 'v2.2' // }); //
-	FB.getLoginStatus(function(response) { //
-	statusChangeCallback(response); // }); // }; // (function(d, s, id) {
-	// var js, fjs = d.getElementsByTagName(s)[0]; // if
-	(d.getElementById(id)) // return; // js = d.createElement(s); // js.id
-	= id; // js.src = "//connect.facebook.net/en_US/sdk.js"; //
-	fjs.parentNode.insertBefore(js, fjs); // }(document, 'script',
-	'facebook-jssdk'));
-	<!-- 	</script> -->
+	<script>
+	  function statusChangeCallback(response) {
+	    if (response.status === 'connected') 
+	    	showPosts(response.authResponse.accessToken,1);
+	     else if (response.status === 'not_authorized') 
+	      $("#content").html('Conecte-se ao aplicativo, por favor.');
+	     else 
+	    	$("#content").html('Conecte-se ao Facebook, por favor.');
+	  }
+
+	  // This function is called when someone finishes with the Login
+	  // Button.  See the onlogin handler attached to it in the sample
+	  // code below.
+	  function checkLoginState() {
+	    FB.getLoginStatus(function(response) {
+	      statusChangeCallback(response);
+	    });
+	  }
+
+	  window.fbAsyncInit = function() {
+	  FB.init({
+	    appId      : '787895154627678',
+	    cookie     : true,  // enable cookies to allow the server to access 
+	                        // the session
+	    xfbml      : true,  // parse social plugins on this page
+	    version    : 'v2.2' // use version 2.2
+	  });
+
+	  // Now that we've initialized the JavaScript SDK, we call 
+	  // FB.getLoginStatus().  This function gets the state of the
+	  // person visiting this page and can return one of three states to
+	  // the callback you provide.  They can be:
+	  //
+	  // 1. Logged into your app ('connected')
+	  // 2. Logged into Facebook, but not your app ('not_authorized')
+	  // 3. Not logged into Facebook and can't tell if they are logged into
+	  //    your app or not.
+	  //
+	  // These three cases are handled in the callback function.
+
+	  FB.getLoginStatus(function(response) {
+	    statusChangeCallback(response);
+	  });
+
+	  };
+
+	  // Load the SDK asynchronously
+	  (function(d, s, id) {
+	    var js, fjs = d.getElementsByTagName(s)[0];
+	    if (d.getElementById(id)) return;
+	    js = d.createElement(s); js.id = id;
+	    js.src = "//connect.facebook.net/en_US/sdk.js";
+	    fjs.parentNode.insertBefore(js, fjs);
+	  }(document, 'script', 'facebook-jssdk'));
+
+	  // Here we run a very simple test of the Graph API after login is
+	  // successful.  See statusChangeCallback() for when this call is made.
+	  function testAPI() {
+	    console.log('Welcome!  Fetching your information.... ');
+	    FB.api('/me', function(response) {
+	      console.log('Successful login for: ' + response.name);
+	      document.getElementById('status').innerHTML =
+	        'Thanks for logging in, ' + response.name + '!';
+	    });
+	  }
+	</script>
+		
+
 	<div class="loader">
 		<div class="progress">
 			<div
@@ -73,13 +126,16 @@
 						<ul class="nav navbar-nav">
 							<li id="btn_sobre" onclick="showAbout()"><a
 								href="javascript:void(0)">Sobre</a></li>
-							<li id="btn_posts"
-								onclick="showPosts('CAACEdEose0cBAORPiDA0mqrqMZAAQ25P9oOYCEc0wl2RbcZAVBPNeuACIT9cZBsbeUO8Bqp4FRZBIyaiuxlNN2QWDaBWDfLJVmmUmNRoo8bfQdhf0DY9M6lxRnlS2McPEJrKWmWlFZBVNPH3KsGpDkqZAGICTB9lcNzzC8uta2zCHqmERKmBzrdhXNCHwwWd8pFMV46E9aVeeMgdNqoI1wnm0w5VKNAQ8ZD', 1)"><a
-								href="javascript:void(0)"> <!-- 							  <fb:login-button -->
-									<!-- 								scope="public_profile,user_friends, --> <!-- 								 user_status, user_photos, user_posts, -->
-									<!-- 								  user_videos" onlogin="checkLoginState();"> --> <!-- 									Posts </fb:login-button> -->
-									Posts
-							</a></li>
+							<li id="btn_posts" class="navbar -btn">
+ 								<p class="navbar -btn"> 
+<!-- 									<fb:login-button -->
+<!-- 										scope="user_friends, user_status, user_photos, user_videos, user_posts, manage_pages" -->
+<!-- 										onlogin="checkLoginState();">  -->
+<!-- 								 										Posts </fb:login-button> -->
+									<a href="javascript:void(0)" onclick="showPosts('CAACEdEose0cBAJxF69c2kaLsvMTeg1bVjNaZApzWDfaRMixPF2iCUjOFf6ksg8Dj5XjCGOe9scZBr7QlAIqjav99drKqNuEZAavSIec7exMaaOnYSahgfl9XEvQajafBjJUKvqyZCMu35ZAqvMTiBigBqeVio8UrxOHQnT9ZA2ZAIxj26lddBDFjRh15BNgWDNxw655PjJtsvQJeAfYymhe',1)">
+										POSTS</a>
+								 </p>
+							</li>
 						</ul>
 					</div>
 
