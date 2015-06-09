@@ -131,7 +131,7 @@
  									<fb:login-button 
  							scope="user_friends, user_status, user_photos, user_videos, user_posts, manage_pages" 
  										onlogin="checkLoginState();">  
- 																													Posts </fb:login-button> 
+ 																			POSTS 										Posts </fb:login-button> 
 
 								 </p>
 							</li>

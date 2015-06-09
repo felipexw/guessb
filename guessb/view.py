@@ -4,7 +4,7 @@
 @author: felipexw
 '''
 from django.shortcuts import render
-from DAO import DAOFactory
+from DAO import DAO
 import math
 from django.http.response import HttpResponse
 
