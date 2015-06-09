@@ -192,8 +192,8 @@ function finishWidthProgressBar(){
 	timer = undefined;
 }
 
-function showAnotherHome(){
-	var param = document.getElementById('accessTokenInput').value;
-	showPosts(param, 1);
+function showAnotherHome(param){
+	debugger;
+	showPosts(param.value, 1);
 }
 	
