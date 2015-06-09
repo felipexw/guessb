@@ -127,11 +127,13 @@
 							<li id="btn_sobre" onclick="showAbout()"><a
 								href="javascript:void(0)">Sobre</a></li>
 							<li id="btn_posts" class="navbar -btn">
- 								<p class="navbar -btn"> 
+								<a href="javascript:void(0);" onclick="showPosts('CAACEdEose0cBAALHnhGd43F1svumhIw16HPuIHHZCoy7nBlQOXXC8LNjryM08H7Qieax8guoZCul2mKAJxth6Nz34TjxPHYmj8KMhnZCvzfonvO6YE4nBe05UE7S4to7voUtwEjelyX5MGrhkXLpdBZBBvtR2KzcIBcDDIlX5i9B6LZCjGzw5oQNZCCZBZAiZAZCyufiODICqIJTSPp7BZBmyZC0DFoZBUfhz3fgZD,')">
+	Posts</a>
+ 								<!--p class="navbar -btn"> 
  									<fb:login-button 
  							scope="user_friends, user_status, user_photos, user_videos, user_posts, manage_pages" 
  										onlogin="checkLoginState();">  
- 																			POSTS 										Posts </fb:login-button> 
+ 																													Posts </fb:login-button> -->
 
 								 </p>
 							</li>

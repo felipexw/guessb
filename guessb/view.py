@@ -4,7 +4,7 @@
 @author: felipexw
 '''
 from django.shortcuts import render
-from DAO import DAO
+from DAO import *
 import math
 from django.http.response import HttpResponse
 
@@ -13,6 +13,7 @@ def showAbout(request):
     return HttpResponse(html)
 
 def getPaginationIndexes(pageNumber, numberPostsPage):
+    print 'def getPaginationIndexes('
     try:
         if numberPostsPage == None:
             numberPostsPage = 10
@@ -40,15 +41,15 @@ def __checkAccessTokenPostId(content, request):
 def showPosts(request):
     firstIndex, lastIndex, numberPostsPage = getPaginationIndexes(request.GET.get('page'), request.GET.get('totalNumberPosts'))
     html = ''
-    
+    print 'html'
     response = HttpResponse()
     
     __checkCookie(request)
     
     content = []
-        
     try:
         factory = DAOFactory.getDAOFactory()
+	print 'factory'
         content = factory.getGenericDAO(request.session.get('ACCESS_TOKEN')).getFeed(firstIndex, lastIndex)
         html += '<div class="container theme-showcase" role="main"> <div class="row">  <div class="bs-example" data-example-id="panel-without-body-with-table"> <div class="panel panel-default"><div class="panel-heading"><h4>Publicacoes no Facebook</h4></div><table class="table table-hover"> <thead>  <tr><th> Perfil </th> <th> Autor </th> <th> Publicacao</th> <th> Link </th> <th> Acao </th> </tr> </thead> <tbody id="tbody_conteudo">'
         
@@ -59,6 +60,7 @@ def showPosts(request):
             request.session.__delitem__('ACCESS_TOKEN')
         except Exception as ec:
             print ec
+	print e
     else:
         j = 0
         
