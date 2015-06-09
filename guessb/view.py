@@ -9,6 +9,7 @@ import math
 from django.http.response import HttpResponse
 
 def showAnotherHome(request):
+    print 'def showAnotherHome(request):'
     html = ''
     if 'ACCESS_TOKEN' not in request.session:
         html = '<div id="jumbotron" class="jumbotron"> <h1>Seja bem-vindo ao Guessb!</h1><p>Este webapp é o Trabalho de Conclusão apresentado ao Curso de Sistemas de Informação, da Universidade do Estado de Santa Catarina, como requisito parcial para obtenção do grau de Bacharel em Sistemas de Informação.</p></div></div>'
@@ -58,8 +59,7 @@ def showPosts(request):
     
     content = []
     try:
-        factory = DAOFactory.getDAOFactory()
-	print 'factory'
+        factory = DAOFactory.getDAOFactory()	
         content = factory.getGenericDAO(request.session.get('ACCESS_TOKEN')).getFeed(firstIndex, lastIndex)
         html += '<div class="container theme-showcase" role="main"> <div class="row">  <div class="bs-example" data-example-id="panel-without-body-with-table"> <div class="panel panel-default"><div class="panel-heading"><h4>Publicacoes no Facebook</h4></div><table class="table table-hover"> <thead>  <tr><th> Perfil </th> <th> Autor </th> <th> Publicacao</th> <th> Link </th> <th> Acao </th> </tr> </thead> <tbody id="tbody_conteudo">'
         
