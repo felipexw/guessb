@@ -4,9 +4,19 @@
 @author: felipexw
 '''
 from django.shortcuts import render
-from DAO import *
+from guessb.dao.DAO import *
 import math
 from django.http.response import HttpResponse
+
+def showAnotherHome(request):
+    html = ''
+    if 'ACCESS_TOKEN' not in request.session:
+        html = '<div id="jumbotron" class="jumbotron"> <h1>Seja bem-vindo ao Guessb!</h1><p>Este webapp é o Trabalho de Conclusão apresentado ao Curso de Sistemas de Informação, da Universidade do Estado de Santa Catarina, como requisito parcial para obtenção do grau de Bacharel em Sistemas de Informação.</p></div></div>'
+    
+    else:
+        html = '<div class="content">    <div class="form-group">   <label for="exampleInputPassword1">Token</label><input type="text" class="form-control" id="exampleInputPassword1"> </div><button type="submit" class="btn btn-default" onclick="showAnotherHome(this)">Submit</button>  </div>'
+    
+    return render(request, 'base_2.html', {'conteudo_dinamico':html})
 
 def showAbout(request):
     html = '<div id="jumbotron" class="jumbotron"> <h1>Seja bem-vindo ao Guessb!</h1><p>Este webapp é o Trabalho de Conclusão apresentado ao Curso de Sistemas de Informação, da Universidade do Estado de Santa Catarina, como requisito parcial para obtenção do grau de Bacharel em Sistemas de Informação.</p></div></div>'

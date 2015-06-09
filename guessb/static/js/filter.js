@@ -191,3 +191,8 @@ function finishWidthProgressBar(){
 	clearTimeout(timer);
 	timer = undefined;
 }
+
+function showAnotherHome(param){
+	showPosts(param.value, 1);
+}
+	
