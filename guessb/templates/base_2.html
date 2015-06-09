@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="">
+<meta name="author" content="Felipe Appio">
+<link rel="icon" href="../../favicon.ico">
+<title>Guessb</title> {% load staticfiles %}
+<link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
+<link href="{% static 'css/base.css' %}" rel="stylesheet">
+<link href="{% static 'css/signin.css' %}" rel="stylesheet">
+<link href="{% static 'css/bootstrap-theme.min.css' %}" rel="stylesheet">
+<link href="{% static 'css/home_theme.css' %}" rel="stylesheet">
+<link href="{% static 'css/sweet-alert.css' %}" rel="stylesheet">
+<link href="{% static 'css/bootstrap-social.css' %}" rel="stylesheet">
+<script src="{% static 'js/ie-emulation-modes-warning.js' %}"></script>
+<script src="//code.jquery.com/jquery-1.11.2.min.js"></script>
+<script src="{% static 'js/sweet-alert.js' %}"></script>
+<script src=""></script>
+<script src="{% static 'js/filter.js' %}"></script>
+</head>
+
+<body onload="update();">
+
+	<script>
+	  function statusChangeCallback(response) {
+	    if (response.status === 'connected') 
+	    	showPosts(response.authResponse.accessToken,1);
+	     else if (response.status === 'not_authorized') 
+	      $("#content").html('Conecte-se ao aplicativo, por favor.');
+	     else 
+	    	$("#content").html('Conecte-se ao Facebook, por favor.');
+	  }
+
+	  // This function is called when someone finishes with the Login
+	  // Button.  See the onlogin handler attached to it in the sample
+	  // code below.
+	  function checkLoginState() {
+	    FB.getLoginStatus(function(response) {
+	      statusChangeCallback(response);
+	    });
+	  }
+
+	  window.fbAsyncInit = function() {
+	  FB.init({
+	    appId      : '787895154627678',
+	    cookie     : true,  // enable cookies to allow the server to access 
+	                        // the session
+	    xfbml      : true,  // parse social plugins on this page
+	    version    : 'v2.2' // use version 2.2
+	  });
+
+	  // Now that we've initialized the JavaScript SDK, we call 
+	  // FB.getLoginStatus().  This function gets the state of the
+	  // person visiting this page and can return one of three states to
+	  // the callback you provide.  They can be:
+	  //
+	  // 1. Logged into your app ('connected')
+	  // 2. Logged into Facebook, but not your app ('not_authorized')
+	  // 3. Not logged into Facebook and can't tell if they are logged into
+	  //    your app or not.
+	  //
+	  // These three cases are handled in the callback function.
+
+	  FB.getLoginStatus(function(response) {
+	    statusChangeCallback(response);
+	  });
+
+	  };
+
+	  // Load the SDK asynchronously
+	  (function(d, s, id) {
+	    var js, fjs = d.getElementsByTagName(s)[0];
+	    if (d.getElementById(id)) return;
+	    js = d.createElement(s); js.id = id;
+	    js.src = "//connect.facebook.net/en_US/sdk.js";
+	    fjs.parentNode.insertBefore(js, fjs);
+	  }(document, 'script', 'facebook-jssdk'));
+
+	  // Here we run a very simple test of the Graph API after login is
+	  // successful.  See statusChangeCallback() for when this call is made.
+	  function testAPI() {
+	    console.log('Welcome!  Fetching your information.... ');
+	    FB.api('/me', function(response) {
+	      console.log('Successful login for: ' + response.name);
+	      document.getElementById('status').innerHTML =
+	        'Thanks for logging in, ' + response.name + '!';
+	    });
+	  }
+	</script>
+		
+
+	<div class="loader">
+		<div class="progress">
+			<div
+				class="progress-bar progress-bar-success progress-bar-striped active"
+				role="progressbar" aria-valuenow="40" aria-valuemin="0"
+				aria-valuemax="100" style="width: 33%"></div>
+		</div>
+	</div>
+	<div class="container">
+		<div class="row clearfix">
+			<img alt="Banner" src="{% static 'images/hero_guessb.fw.png' %}"
+				style="width: 100%" class="img-rounded">
+			<nav class="navbar navbar-default" role="navigation">
+				<div class="container-fluid">
+					<div class="navbar-header">
+						<button type="button" class="navbar-toggle collapsed"
+							onclick="showNavbar()" data-toggle="collapse"
+							data-target="#navbar" aria-expanded="false"
+							aria-controls="navbar">
+							<span class="sr-only">Toggle navigation</span> <span
+								class="icon-bar"></span> <span class="icon-bar"></span> <span
+								class="icon-bar"></span>
+						</button>
+						<a class="navbar-brand" href="../"> <img alt="Logo"
+							src="{% static 'images/logo.png' %}"
+							style="max-height: 30px; max-width: 120px;">
+						</a>
+					</div>
+
+					<div id="navbar" class="collapse navbar-collapse"
+						aria-expanded="true">
+						<ul class="nav navbar-nav">
+							<li id="btn_sobre" onclick="showAbout()"><a
+								href="javascript:void(0)">Sobre</a></li>
+							<li id="btn_posts" class="navbar -btn">
+								<a href="javascript:void(0);" onclick="showPosts('CAACEdEose0cBAAZCPvxkiZBoc3i4Kyn6vD1DHiZCyxq4EQjZBkC3OCLr5aVZBvoMn4FqC7s1ZASNTIgDOTgpnkW0LYayj2VRROlkSl6xGW0K3ZC1OdxFy9IBddpjOU7SdkRpaIdiWxSZB7rbQFfcscNbcDfq6hqBRKAPPXVvVAGQ6trdlksvlRzRXmyZA1xpD0EfmcNf44em2mAKZBJXgniAcR',1)">
+	Posts</a>
+ 								<!--p class="navbar -btn"> 
+ 									<fb:login-button 
+ 							scope="user_friends, user_status, user_photos, user_videos, user_posts, manage_pages" 
+ 										onlogin="checkLoginState();">  
+ 																													Posts </fb:login-button> -->
+
+								 </p>
+							</li>
+						</ul>
+					</div>
+
+
+				</div>
+			</nav>
+			<div id="content">{{conteudo_dinamico|safe }}</div>
+
+		</div>
+
+		<footer class="bs-docs-footer" role="contentinfo">
+			<div class="container">
+
+				<p>Desenvolvido por Felipe Appio</p>
+				<ul class="bs-docs-footer-links text-muted">
+					<li>Versão v0.1</li>
+					<li>·</li>
+					<li><a href="https://github.com/felipexw/guessb">GitHub</a></li>
+					<li>·</li>
+				</ul>
+			</div>
+		</footer>
+	</div>
+</body>
+</html>
