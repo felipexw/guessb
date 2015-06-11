@@ -52,7 +52,6 @@ def __checkAccessTokenPostId(content, request):
 def showPosts(request):
     firstIndex, lastIndex, numberPostsPage = getPaginationIndexes(request.GET.get('page'), request.GET.get('totalNumberPosts'))
     html = ''
-    print 'html'
     response = HttpResponse()
     
     __checkCookie(request)
@@ -61,17 +60,16 @@ def showPosts(request):
     try:
         factory = DAOFactory.getDAOFactory()	
         content = factory.getGenericDAO(request.session.get('ACCESS_TOKEN')).getFeed(firstIndex, lastIndex)
-        print ' content' 
-        html += '<div class="container theme-showcase" role="main"> <div class="row">  <div class="bs-example" data-example-id="panel-without-body-with-table"> <div class="panel panel-default"><div class="panel-heading"><h4>Posts on Facebook</h4></div><table class="table table-hover"> <thead>  <tr><th> Profile </th> <th> Author </th> <th> Post</th> <th> Link </th> <th> Action </th> </tr> </thead> <tbody id="tbody_conteudo">'
+        html += '<div class="container theme-showcase" role="main"> <div class="row">  <div class="bs-example" data-example-id="panel-without-body-with-table"> <div class="panel panel-default"><div class="panel-heading"><h4>Posts on Facebook</h4></div><table class="table table-hover"> <thead>  <tr><th> Profile </th> <th> Author </th> <th> Post</th><th>N. Comments</th> <th> Link </th> <th> Action </th> </tr> </thead> <tbody id="tbody_conteudo">'
         
         __checkAccessTokenPostId(content, request)
     except Exception as e:
-        html = '<div id="jumbotron" class="jumbotron"> <p>Sua sessão no Facebook expirou. Por favor, conecte-se novamente.</p></div>'
+        html = '<div id="jumbotron" class="jumbotron"> <p>Your session has expired. Please connect again.</p></div>'
         try:
             request.session.__delitem__('ACCESS_TOKEN')
         except Exception as ec:
             print ec
-	print e
+	
     else:
         j = 0
         
@@ -82,7 +80,7 @@ def showPosts(request):
                 postId = "'%s'" % content[i]['postId']
                 st = "showCommentsFromPosts(%s,%s)" % ('1', postId)
                 try:
-                    html += '<tr><td>' + profileImg + '<p style="text-align: center">' + content[i]['profileName'] + '</p>  </td><td>' + img + '<p style="text-align: center">' + content[i]['authorName'] + '</p>  </td><td><p>' + content[i]['messageContent'] + '</p></td><td><p><a href="%s' % content[i]['link'] + '">Link</a></p></td><td><p><button type="button" onclick=%s' % st + ' role="button" class="btn btn-md btn-success"><i class="glyphicon glyphicon-tag icon-th"></i></a></p></td></tr>'
+                    html += '<tr><td>' + profileImg + '<p style="text-align: center">' + content[i]['profileName'] + '</p>  </td><td>' + img + '<p style="text-align: center">' + content[i]['authorName'] + '</p>  </td><td><p>' + content[i]['messageContent'] + '</p></td><td><p>%i' % content[i]['quantityComments']+'</p><td><p><a href="%s' % content[i]['link'] + '">Link</a></p></td><td><p><button type="button" onclick=%s' % st + ' role="button" class="btn btn-md btn-success"><i class="glyphicon glyphicon-tag icon-th"></i></a></p></td></tr>'
                 except Exception as e:
                     print e
                 j += 1
@@ -165,10 +163,14 @@ def showComments(request):
         print e
     else:
         html = __getHtmlPanelHeadComments(dictionaryComments)
+        j = 0
         
         for i in xrange(0, len(content)):
-            html += '<tr><td> <img  src="//graph.facebook.com/' + content[i]['authorId'] + '/picture?type=large" style="width: 75px; height: 75px;" class="img-circle "/><p style="text-align: center">' + content[i]['authorName'] + '</p></td><td>' + content[i]['messageContent'] + '</td>' + '<td>' + content[i]['polarity'] + '</td></tr>'
-        
+            if i >= firstIndex and i < lastIndex:
+                html += '<tr><td> <img  src="//graph.facebook.com/' + content[i]['authorId'] + '/picture?type=large" style="width: 75px; height: 75px;" class="img-circle "/><p style="text-align: center">' + content[i]['authorName'] + '</p></td><td>' + content[i]['messageContent'] + '</td>' + '<td>' + content[i]['polarity'] + '</td></tr>'
+                j += 1
+            if j ==  numberPostsPage:
+                break
         html += '</tbody> </table> </div> </div> '                        
         html += __get_html_paginacao(dictionaryComments['All'], numberPostsPage, "'comments'", request.GET.get('postId'), request.GET.get('page'))
     
