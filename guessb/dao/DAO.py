@@ -36,37 +36,41 @@ class GenericDAOFacebook(DAO):
         facebookObject = OpenFacebook(self._accessToken_)
         feedData = facebookObject.get('me/feed')
         content = []
-        commentsLength = 0
+        dictionaryComments = {'Positive' : 0, 'Negative' : 0, 'Neuter' : 0, 'All' : 0}
         classifier = NBClassifierLoader()
         
         for i in  xrange(0, len(feedData['data'])):
             if (feedData['data'][i].get('id') == id):
                 comments = feedData['data'][i].get('comments').get('data')
-                commentsLength = len(comments)
-               
-                for j in xrange(0, commentsLength):
-                    if (j >= firstIndex) and (j < lastIndex):
-                        messageContent = comments[j].get('message', '')
-                        authorName = comments[j].get('from').get('name')
-                        authorId = comments[j].get('from').get('id')
-                        polarity = self.getPolarity(classifier.classify(messageContent))
-                        content.append(dict(
-                                        authorId=authorId,
-                                        authorName=authorName,
-                                        messageContent=messageContent,
-                                        polarity=polarity))
-                break        
-        return content, commentsLength
-
+                dictionaryComments['All'] = len(comments)
+                
+                for j in xrange(0, dictionaryComments['All']):
+                    messageContent = comments[j].get('message', '')
+                    authorName = comments[j].get('from').get('name')
+                    authorId = comments[j].get('from').get('id')
+                    polarity = self.getPolarity(classifier.classify(messageContent))
+                    
+                    self.countComments(dictionaryComments, polarity)
+                    
+                    content.append(dict(
+                                    authorId=authorId,
+                                    authorName=authorName,
+                                    messageContent=messageContent,
+                                    polarity=polarity))
+                break
+        return content, dictionaryComments
+    
+    def countComments(self, dictionaryComments, polarity):
+        dictionaryComments[polarity] = int(dictionaryComments[polarity]) + 1 
     
     def getPolarity(self, polaridade):
         if (polaridade == 'neu'):
-            return 'Neutro'
+            return 'Neuter'
     
         elif (polaridade == 'pos'):
-            return "Positivo"
+            return "Positive"
     
-        return'Negativo'
+        return'Negative'
     
     def getFeed(self, firstIndex, lastIndex):
         facebookObject = OpenFacebook(self._accessToken_)
@@ -83,12 +87,13 @@ class GenericDAOFacebook(DAO):
                                     authorId=data.get('from').get('id'),
                                     authorName=data.get('from').get('name', ''),
                                     messageContent=data.get('message',
-                                                            '(Postagem sem texto)'),
+                                                            '(Post without text)'),
                                     link=data.get('link', '#'),
                                     postId=data.get('id')))
         
         self.getFeedPage(content)         
         return content
+    
 
     def getFeedPage(self, content):
         facebookObject = OpenFacebook(self._accessToken_)
@@ -108,7 +113,7 @@ class GenericDAOFacebook(DAO):
                                         authorId=data.get('from').get('id'),
                                         authorName=data.get('from').get('name', ''),
                                         messageContent=data.get('message',
-                                                                '(Postagem sem texto)'),
+                                                                '(Post withouth text)'),
                                         link=data.get('link', '#'),
                                         postId=data.get('id'),
                                         accessToken=pageAccessToken))                                

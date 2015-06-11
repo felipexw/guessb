@@ -1,4 +1,4 @@
-#coding= utf-8
+# coding= utf-8
 '''Created on 20/03/2015
 
 @author: felipexw
@@ -12,7 +12,7 @@ def showAnotherHome(request):
     print 'def showAnotherHome(request):'
     html = ''
     if 'ACCESS_TOKEN' in request.session:
-        html = '<div id="jumbotron" class="jumbotron"> <h1>Seja bem-vindo ao Guessb!</h1><p>Este webapp é o Trabalho de Conclusão apresentado ao Curso de Sistemas de Informação, da Universidade do Estado de Santa Catarina, como requisito parcial para obtenção do grau de Bacharel em Sistemas de Informação.</p></div></div>'
+        html = '<div id="jumbotron" class="jumbotron"> <h1>Welcome to Guessb!</h1><p>The Guessb webapp its the Bachelors Thesis presented to the University of the State of Santa Catarina, as a requirement to the bachelor degree.</p></div></div>'
     
     else:
         html = '<div class="content">    <div class="form-group">   <label for="exampleInputPassword1">Token</label><input type="text" class="form-control" id="accessTokenInput"> </div><button type="submit" class="btn btn-default" onclick="showAnotherHome()">Submit</button>  </div>'
@@ -20,7 +20,7 @@ def showAnotherHome(request):
     return render(request, 'base_2.html', {'conteudo_dinamico':html})
 
 def showAbout(request):
-    html = '<div id="jumbotron" class="jumbotron"> <h1>Seja bem-vindo ao Guessb!</h1><p>Este webapp é o Trabalho de Conclusão apresentado ao Curso de Sistemas de Informação, da Universidade do Estado de Santa Catarina, como requisito parcial para obtenção do grau de Bacharel em Sistemas de Informação.</p></div></div>'
+    html = '<div id="jumbotron" class="jumbotron"> <h1>Welcome to Guessb!</h1><p>The Guessb webapp its the Bachelors Thesis presented to the University of the State of Santa Catarina, as a requirement to the bachelor degree.</p></div></div>'
     return HttpResponse(html)
 
 def getPaginationIndexes(pageNumber, numberPostsPage):
@@ -62,7 +62,7 @@ def showPosts(request):
         factory = DAOFactory.getDAOFactory()	
         content = factory.getGenericDAO(request.session.get('ACCESS_TOKEN')).getFeed(firstIndex, lastIndex)
         print ' content' 
-        html += '<div class="container theme-showcase" role="main"> <div class="row">  <div class="bs-example" data-example-id="panel-without-body-with-table"> <div class="panel panel-default"><div class="panel-heading"><h4>Publicacoes no Facebook</h4></div><table class="table table-hover"> <thead>  <tr><th> Perfil </th> <th> Autor </th> <th> Publicacao</th> <th> Link </th> <th> Acao </th> </tr> </thead> <tbody id="tbody_conteudo">'
+        html += '<div class="container theme-showcase" role="main"> <div class="row">  <div class="bs-example" data-example-id="panel-without-body-with-table"> <div class="panel panel-default"><div class="panel-heading"><h4>Posts on Facebook</h4></div><table class="table table-hover"> <thead>  <tr><th> Profile </th> <th> Author </th> <th> Post</th> <th> Link </th> <th> Action </th> </tr> </thead> <tbody id="tbody_conteudo">'
         
         __checkAccessTokenPostId(content, request)
     except Exception as e:
@@ -110,7 +110,7 @@ def __get_html_paginacao(tamanho, commentsNumber=5, redirect_page="'posts'", pos
             functionName = 'showPosts(%s, %i)' % ('1', int(i + 1))
         
         else:
-            functionName = "showCommentsFromPosts(%i, '%s')" % (int(i+1), postId) 
+            functionName = "showCommentsFromPosts(%i, '%s')" % (int(i + 1), postId) 
         
         if postId == 0:
             html += '<li class=%s' % className + '" id="%i' % int(i + 1) + '"><a onclick="%s" ' % functionName + 'href="javascript:void(0)">%i' % int(i + 1) + '</a></li>'
@@ -120,7 +120,7 @@ def __get_html_paginacao(tamanho, commentsNumber=5, redirect_page="'posts'", pos
     return html    
 
 def showHome(request):
-    html = '<div id="jumbotron" class="jumbotron"> <h1>Seja bem-vindo ao Guessb!</h1><p>Este webapp faz análise de sentimentos (positivo, negativo ou neutro) em comentários escrito em português do Brasil, compartilhados por seguidores timeline do usuário dessa ferramenta. O classificador utilizado é o Multinomial Naive Bayes.</p></div></div>'
+    html = '<div id="jumbotron" class="jumbotron"> <h1>Welcome to Guessb!</h1><p>The Guessb webapp do sentiment analysis (positive, negative or neuter) in Brazil portuguese comments, shared by another users on a give users timeline. The machine learning techinique used in the Guessb webapp is the Multinomial Naive Bayes.</p></div></div>'
     return render(request, 'base.html', {'conteudo_dinamico':html})
 
 def __getAccessTokenPostIt(request, postId):
@@ -129,13 +129,29 @@ def __getAccessTokenPostIt(request, postId):
     
     return request.session.get('ACCESS_TOKEN')
 
+def __getHtmlPanelHeadComments(dictionaryComments):
+    html = '<div class="panel panel-default"><div class="panel-heading">  <div class="pull-right">  <div id="div_btn_group" onclick="updateStatusButtonGroup(this)" class="btn-group" class="btn-group"><button type="button" class="multiselect dropdown-toggle btn btn-default" data-toggle="dropdown" title=""><i class="glyphicon glyphicon-th icon-th"></i> <b class="caret"></b></button><ul class="multiselect-container dropdown-menu"><li>  <a tabindex="0">    <label class="checkbox">      <input onclick="filter();" type="checkbox" checked="true" value="Positive" name="check_box">Positive</label> </a></li> <li><a tabindex="0"> <label class="checkbox"> <input type="checkbox" onclick="filter();" value="Negative" name="check_box" checked="">Negative </label></a></li><li><a tabindex="0"><label class="checkbox"> <input type="checkbox" onclick="filter();" value="Neuter" name="check_box" checked="">Neuter</label></a></li></ul></div></div><h3>Sentiment Analysis of Posts on Facebook</h3><div class="progress">'
+    positivePercent =  round(float(dictionaryComments.get('Positive')) / float(dictionaryComments.get('All')), 2) * 100
+    negativePercent =  round(float(dictionaryComments.get('Negative')) / float(dictionaryComments.get('All')), 2) * 100
+    neuterPercent = round(float(dictionaryComments.get('Neuter')) / float(dictionaryComments.get('All')), 2) * 100
+    
+    if positivePercent > 0:
+        html += '<div class="progress-bar progress-bar-success progress-bar-striped" style="width:' + str(positivePercent) + '%"><p>' + str(positivePercent) + '% Positive</p> </div>'
+    
+    if negativePercent > 0:
+        html += '<div class="progress-bar progress-bar-danger progress-bar-striped" style="width: ' + str(negativePercent) + '%"><p>' + str(negativePercent) + '% Negative</p></div>'
+    
+    if neuterPercent > 0:
+        html += '<div class="progress-bar progress-bar-info progress-bar-striped" style="width: ' + str(neuterPercent) + '%"> <p>' + str(neuterPercent) + '% Neuter </p> </div>'
+
+    html += '</div></div><table class="table table-hover"> <thead>  <tr> <th> Author </th> <th> Post</th> <th> Label     </th> </tr> </thead> <tbody id="tbody_conteudo">'
+    return html
+
 def showComments(request):
     html = '' 
-    
     try:
         firstIndex, lastIndex, numberPostsPage = getPaginationIndexes(request.GET.get('page'), request.GET.get('totalNumberPosts'))
-        html = '<div class="container theme-showcase" role="main"> <div class="row"> <div class="bs-example" data-example-id="panel-without-body-with-table"> <div class="panel panel-default"> <div class="panel-heading">  <div class="pull-right">  <div id="div_btn_group" onclick="updateStatusButtonGroup(this)";class="btn-group"><button type="button" class="multiselect dropdown-toggle btn btn-default" data-toggle="dropdown" title=""><i class="glyphicon glyphicon-th icon-th"></i> <b class="caret"></b></button><ul class="multiselect-container dropdown-menu"><li>  <a tabindex="0">    <label class="checkbox">      <input onclick="filter();"type="checkbox" checked="true" value="Positivo" name="check_box" checked>Positivo</label> </a></li> <li><a tabindex="0"> <label class="checkbox"> <input type="checkbox" onclick="filter();" value="Negativo" name="check_box" checked>Negativo </label></a></li><li><a tabindex="0"><label class="checkbox"> <input type="checkbox"  onclick="filter();" value="Neutro" name="check_box" checked>Neutro</label></a></li></ul></div></div><h4>Publicacoes no Facebook</h4></div><table class="table table-hover"> <thead>  <tr> <th> Autor </th> <th> Publicacao</th> <th> Classificacao     </th> </tr> </thead> <tbody id="tbody_conteudo">'
-    
+
         response = HttpResponse()
     
         __checkCookie(request)
@@ -143,16 +159,18 @@ def showComments(request):
     
         factory = DAOFactory.getDAOFactory()
         accessToken = __getAccessTokenPostIt(request, request.GET.get('postId'))
-        content, contentLength = factory.getGenericDAO(accessToken).getCommentsFeed(request.GET.get('postId'), firstIndex, lastIndex)
+        content, dictionaryComments = factory.getGenericDAO(accessToken).getCommentsFeed(request.GET.get('postId'), firstIndex, lastIndex)
     except Exception as e:
-        html = '<div id="jumbotron" class="jumbotron"> <p>Sua sessão no Facebook expirou. Por favor, conecte-se novamente.</p></div>'
+        html = '<div id="jumbotron" class="jumbotron"> <p>Your session has expirde. Please conect again.</p></div>'
         print e
     else:
+        html = __getHtmlPanelHeadComments(dictionaryComments)
+        
         for i in xrange(0, len(content)):
             html += '<tr><td> <img  src="//graph.facebook.com/' + content[i]['authorId'] + '/picture?type=large" style="width: 75px; height: 75px;" class="img-circle "/><p style="text-align: center">' + content[i]['authorName'] + '</p></td><td>' + content[i]['messageContent'] + '</td>' + '<td>' + content[i]['polarity'] + '</td></tr>'
         
         html += '</tbody> </table> </div> </div> '                        
-        html += __get_html_paginacao(contentLength, numberPostsPage, "'comments'", request.GET.get('postId'), request.GET.get('page'))
+        html += __get_html_paginacao(dictionaryComments['All'], numberPostsPage, "'comments'", request.GET.get('postId'), request.GET.get('page'))
     
     response.write(html)
     return response
@@ -164,5 +182,5 @@ def __getHtmlNumberPage_(length):
     for i in xrange(1, int(limit)):
         html += '<li><a href="javascript:void(0)" onclick="showPostsPerNumber(1, 1, ' + str((i * 10)) + ')" >' + str(i * 10) + '</a></li>'
     
-    html += '<li><a href="javascript:void(0)" onclick="showPostsPerNumber(1, 1,' + str(length)+'>Todos</a></ul></div>'
+    html += '<li><a href="javascript:void(0)" onclick="showPostsPerNumber(1, 1,' + str(length) + '>Todos</a></ul></div>'
     return html

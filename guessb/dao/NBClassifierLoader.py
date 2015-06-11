@@ -12,3 +12,6 @@ class NBClassifierLoader(object):
         words = word_tokenize(text)
         feats = dict([(word, True) for word in words])
         return classifier.classify(feats)
+
+classifier = NBClassifierLoader()
+print classifier.classify(unicode("Lixoooo!    Sou fã desse jogo, mas estou desapontado com essa versão para celular que não funciona, pior que não funcionar, ele te enche de falsas esperanças e depois desliga sem mais explicações! Tem como arrumar esse defeito, ou é tão difícil assim?",  errors="ignore"))
