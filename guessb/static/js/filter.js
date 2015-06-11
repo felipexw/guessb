@@ -100,7 +100,6 @@ function showNavbar() {
 }
 
 function showPosts(authResponse, page) {
-	debugger;
 	$.ajax({
 		type : "GET",
 		url : "../posts/",
@@ -121,7 +120,6 @@ function showPosts(authResponse, page) {
 }
 
 function showPostsPerNumber(authResponse, page, totalNumberPosts) {
-	debugger;
 	$.ajax({
 		type : "GET",
 		url : "../posts/",
@@ -143,14 +141,14 @@ function showPostsPerNumber(authResponse, page, totalNumberPosts) {
 }
 
 
-function showCommentsFromPosts(page, postId){
-	debugger;
+function showCommentsFromPosts(page, postId, numberPageFromPost){
 	$.ajax({
 		type : "GET",
 		url : "../comments/",
 		data : {
 			page : page,
-			postId: postId
+			postId: postId,
+			numberPageFromPost : numberPageFromPost
 		},
 		beforeSend: function(){
 			progressBar();

@@ -78,7 +78,7 @@ def showPosts(request):
                 profileImg = '<img  src="//graph.facebook.com/' + content[i].get('profileId') + '/picture?type=large"' + ' style="width: 45px; height: 45px;" class="img-circle"/>' 
                 img = '<img  src="//graph.facebook.com/' + content[i].get('authorId') + '/picture?type=large"' + ' style="width: 75px; height: 75px;" class="img-circle"/>'
                 postId = "'%s'" % content[i]['postId']
-                st = "showCommentsFromPosts(%s,%s)" % ('1', postId)
+                st = "showCommentsFromPosts(%s,%s,%s)" % ('1', postId, str(request.GET.get('page')))
                 try:
                     html += '<tr><td>' + profileImg + '<p style="text-align: center">' + content[i]['profileName'] + '</p>  </td><td>' + img + '<p style="text-align: center">' + content[i]['authorName'] + '</p>  </td><td><p>' + content[i]['messageContent'] + '</p></td><td><p>%i' % content[i]['quantityComments']+'</p><td><p><a href="%s' % content[i]['link'] + '">Link</a></p></td><td><p><button type="button" onclick=%s' % st + ' role="button" class="btn btn-md btn-success"><i class="glyphicon glyphicon-tag icon-th"></i></a></p></td></tr>'
                 except Exception as e:
@@ -127,8 +127,9 @@ def __getAccessTokenPostIt(request, postId):
     
     return request.session.get('ACCESS_TOKEN')
 
-def __getHtmlPanelHeadComments(dictionaryComments):
-    html = '<div class="panel panel-default"><div class="panel-heading">  <div class="pull-right">  <div id="div_btn_group" onclick="updateStatusButtonGroup(this)" class="btn-group" class="btn-group"><button type="button" class="multiselect dropdown-toggle btn btn-default" data-toggle="dropdown" title=""><i class="glyphicon glyphicon-th icon-th"></i> <b class="caret"></b></button><ul class="multiselect-container dropdown-menu"><li>  <a tabindex="0">    <label class="checkbox">      <input onclick="filter();" type="checkbox" checked="true" value="Positive" name="check_box">Positive</label> </a></li> <li><a tabindex="0"> <label class="checkbox"> <input type="checkbox" onclick="filter();" value="Negative" name="check_box" checked="">Negative </label></a></li><li><a tabindex="0"><label class="checkbox"> <input type="checkbox" onclick="filter();" value="Neuter" name="check_box" checked="">Neuter</label></a></li></ul></div></div><h3>Sentiment Analysis of Posts on Facebook</h3><div class="progress">'
+def __getHtmlPanelHeadComments(dictionaryComments, numberPageFromPost):
+    numberPageFromPost = "showPosts(' ',%s" % str(numberPageFromPost)+ ")"
+    html = '<div class="panel panel-default"><div class="panel-heading">  <div class="pull-right">  <div class="btn-group" role="group" aria-label="..."><button type="button" onclick="%s" ' % numberPageFromPost + ' class="btn btn-default">Back to posts</button><div id="div_btn_group" onclick="updateStatusButtonGroup(this)" class="btn-group" class="btn-group"><button type="button" class="multiselect dropdown-toggle btn btn-default" data-toggle="dropdown" title=""><i class="glyphicon glyphicon-th icon-th"></i> <b class="caret"></b></button><ul class="multiselect-container dropdown-menu"><li>  <a tabindex="0">    <label class="checkbox">      <input onclick="filter();" type="checkbox" checked="true" value="Positive" name="check_box">Positive</label> </a></li> <li><a tabindex="0"> <label class="checkbox"> <input type="checkbox" onclick="filter();" value="Negative" name="check_box" checked="">Negative </label></a></li><li><a tabindex="0"><label class="checkbox"> <input type="checkbox" onclick="filter();" value="Neuter" name="check_box" checked="">Neuter</label></a></li></ul></div></div></div><h3>Sentiment Analysis of Posts on Facebook</h3><div class="progress">'
     positivePercent =  round(float(dictionaryComments.get('Positive')) / float(dictionaryComments.get('All')), 2) * 100
     negativePercent =  round(float(dictionaryComments.get('Negative')) / float(dictionaryComments.get('All')), 2) * 100
     neuterPercent = round(float(dictionaryComments.get('Neuter')) / float(dictionaryComments.get('All')), 2) * 100
@@ -162,7 +163,7 @@ def showComments(request):
         html = '<div id="jumbotron" class="jumbotron"> <p>Your session has expirde. Please conect again.</p></div>'
         print e
     else:
-        html = __getHtmlPanelHeadComments(dictionaryComments)
+        html = __getHtmlPanelHeadComments(dictionaryComments, request.GET.get('numberPageFromPost'))
         j = 0
         
         for i in xrange(0, len(content)):

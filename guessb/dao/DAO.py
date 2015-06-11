@@ -109,7 +109,8 @@ class GenericDAOFacebook(DAO):
             
             for data in feedData['data']:
                 if 'comments' in data:
-                    content.append(dict(profileName=profile.get('name'),
+                    content.append(dict(quantityComments=len(data.get('comments')),
+                                        profileName=profile.get('name'),
                                         profileId=profile.get('id'),
                                         authorId=data.get('from').get('id'),
                                         authorName=data.get('from').get('name', ''),
