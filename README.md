@@ -35,3 +35,7 @@ Desenvolver uma ferramenta que, por intermédio de técnicas de aprendizagem de 
 - [Django](https://www.djangoproject.com/) - Framework web Python.
 - [NLTK](https://www.nltk.org/) - NLTK is a leading platform for building Python programs to work with human language data.
 - [NLTK-Trainer](https://github.com/japerk/nltk-trainer) - NLTK Trainer exists to make training and evaluating NLTK objects as easy as possible.
+
+
+## Referências
+- [Guessb](http://felipexw.github.io/articles/tcc.pdf) - Ferramenta para detectar comentários ofensivos no Facebook
